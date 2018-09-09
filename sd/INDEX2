@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<body>
+ <button onclick="istekYolla('bahce_aydinlatmasi', '&durum=3');">Bahce aydinlatmasini ac</button> 
+ <button onclick="istekYolla('bahce_aydinlatmasi', '&durum=4');">Bahce aydinlatmasini kapat</button> 
+ <button onclick="istekYolla('lavabo_aydinlatmasi', '&durum=3');">Lavabo aydinlatmasini ac</button> 
+ <button onclick="istekYolla('lavabo_aydinlatmasi', '&durum=4');">Lavabo aydinlatmasini kapat</button>
+ <button onclick="istekYolla('salon_aydinlatmasi', '&durum=1');">Salon aydinlatmasini ac</button> 
+ <button onclick="istekYolla('salon_aydinlatmasi', '&durum=0');">Salon aydinlatmasini kapat</button> 
+ <button onclick="istekYolla('oda_aydinlatmasi', '&durum=1');">Oda aydinlatmasini ac</button> 
+ <button onclick="istekYolla('oda_aydinlatmasi', '&durum=0');">Oda aydinlatmasini kapat</button>  
+ <button onclick="istekYolla('inverter', '&durum=1');">Inverter'i ac</button> 
+ <button onclick="istekYolla('inverter', '&durum=0');">Inverter'i kapat</button>   
+ <button onclick="istekYolla('fan', '&durum=3');">Sogutmayi ac</button> 
+ <button onclick="istekYolla('fan', '&durum=4');">Sogutmayi kapat</button> 
+<p id="sonuc"></p>
+<p id="degerler"></p>
+ 
+<script>
+function degerler(){var e=new XMLHttpRequest;e.onreadystatechange=function(){4==this.readyState&&200==this.status&&(document.getElementById("degerler").innerHTML=this.responseText,setTimeout(function(){degerler()},3e3))},e.open("GET","degerler",!0),e.send()}function getCookie(e){var t=("; "+document.cookie).split("; "+e+"=");if(2==t.length)return t.pop().split(";").shift()}function istekYolla(e,t){var n=new XMLHttpRequest;n.onreadystatechange=function(){4==this.readyState&&200==this.status&&(document.getElementById("sonuc").innerHTML=this.responseText)},n.open("POST",e,!0),n.send("key="+getCookie("key")+t)}degerler();
+</script>
+
+</body>
+</html>
+
+ 

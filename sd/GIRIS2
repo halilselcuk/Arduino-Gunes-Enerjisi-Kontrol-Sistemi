@@ -1,0 +1,9 @@
+ <form action="/giris" method="post"> 
+  Kullanici:<br>
+  <input type="text" name="kullanici" value="">
+  <br>
+  Parola:<br>
+  <input type="password" name="parola" value="">
+  <br><br>
+  <input type="submit" value="Giris">
+</form> 
