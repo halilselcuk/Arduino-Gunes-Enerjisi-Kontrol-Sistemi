@@ -1,0 +1,54 @@
+    <section class="material-half-bg">
+      <div class="cover"></div>
+    </section>
+    <section class="login-content">
+      <div class="logo">
+        <h1>Günes Enerjisi Kontrol Sistemi</h1>
+      </div>
+      <div class="login-box">
+        <form class="login-form" action="#" onsubmit="event.preventDefault();">
+          <h3 class="login-head"><i class="fa fa-lg fa-fw fa-user"></i>GİRİŞ</h3>
+          <div class="form-group">
+            <label class="control-label">KULLANICI</label>
+            <input class="form-control" type="text" id="kullanici" placeholder="" autofocus>
+          </div>
+          <div class="form-group">
+            <label class="control-label">PAROLA</label>
+            <input class="form-control" type="password" id="parola" placeholder="">
+          </div>
+         
+          <div class="form-group btn-container">
+            <button class="btn btn-primary btn-block" onclick="giris()"><i class="fa fa-sign-in fa-lg fa-fw"></i>Giriş</button>
+			<p class="text-center" id="bilgi"></p>
+          </div>
+        </form>
+      </div>
+    </section>
+    <script type="text/javascript">
+		  // Login Page Flipbox control
+		  $('.login-content [data-toggle="flip"]').click(function() {
+			$('.login-box').toggleClass('flipped');
+			return false;
+		  });
+		  	  
+		function giris()
+		{
+				$("#bilgi").html('...');
+				$.ajax({
+				  type: 'POST',
+				  url: "/giris",
+				  data: "kullanici="+$("#kullanici").val()+"&parola="+$("#parola").val(),
+				  success: function(r){
+					if(r == 1)
+					{
+						$("#bilgi").html('Giriş başarılı.');
+						icerigiDegistir("index.htm");
+					}
+					else $("#bilgi").html('Kullanıcı adı veya parola yanlış.');
+				  },
+				  error: function(){
+					$("#bilgi").html('Giriş yapılamıyor.');
+				  }
+				});
+		}
+    </script>

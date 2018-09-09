@@ -1,0 +1,539 @@
+﻿<!-- Navbar-->
+<header class="app-header"><a class="app-header__logo" href="#" id="btn_anasayfa"><em class="fa fa-solar-panel" id="logo"></em> </a>
+  <!-- Sidebar toggle button--><a class="app-sidebar__toggle" href="#" data-toggle="sidebar" aria-label="Hide Sidebar"></a>
+  <!-- Navbar Right Menu-->
+      <ul class="app-nav">
+        <li><a class="app-nav__item" href="#" title="Yerel depolamayı temizle." onclick="localStorage.clear(); window.location.replace('/');"><i class="fas fa-hdd fa-lg"></i></a></li>
+        <li><a class="app-nav__item" href="#" title="Değerleri yenile." id="veri-gostergesi" onclick="degerleriYenile(false);" style="opacity: 0;"><i class="fas fa-broadcast-tower fa-lg"></i></a></li>
+       </ul>
+</header>
+<!-- Sidebar menu-->
+<div class="app-sidebar__overlay" data-toggle="sidebar"></div>
+<aside class="app-sidebar">
+  <ul class="app-menu">
+	<li><a onclick="anasayfa();" href="#" class="app-menu__item" id="btn_anasayfa"><i class="app-menu__icon fa fa-tachometer-alt"></i><span class="app-menu__label">Anasayfa</span></a></li>
+	<li><a onclick="ayarlarS();" href="#" class="app-menu__item yonetici-araci" style="display: none;" id="btn_ayarlar"><i class="app-menu__icon fa fa-cog"></i><span class="app-menu__label">Ayarlar</span></a></li>	
+	<li><a onclick="kalibrasyon();" href="#" class="app-menu__item yonetici-araci" style="display: none;" id="btn_kalibrasyon"><i class="app-menu__icon fa fa-wrench"></i><span class="app-menu__label">Kalibrasyon</span></a></li>	
+	<li><a onclick="kullanici();" href="#" class="app-menu__item yonetici-araci" style="display: none;" id="btn_kullanici"><i class="app-menu__icon fa fa-user"></i><span class="app-menu__label">Kullanıcı</span></a></li>	
+	<li><a onclick="dosya();" href="#" class="app-menu__item yonetici-araci" style="display: none;" id="btn_dosya"><i class="app-menu__icon fa fa-file-upload"></i><span class="app-menu__label">Dosya</span></a></li>	
+	<li><a onclick="loglar();" href="#" class="app-menu__item yonetici-araci" style="display: none;" id="btn_loglar"><i class="app-menu__icon fa fa-pencil-alt"></i><span class="app-menu__label">Loglar</span></a></li>
+	<li><a href="#" class="app-menu__item" onclick="document.cookie = 'key=;'; document.cookie = 'yonetici=;'; window.location.replace('/'); "><i class="app-menu__icon fa fa-sign-out-alt"></i><span class="app-menu__label">Çıkış</span></a></li>
+   </ul>
+</aside>
+<main class="app-content" id="anasayfa" style="display: none;">
+    <div class="row">
+	 <div class="col-md-6 col-lg-4" id="depolanan-enerji">
+	  <div class="widget-small info coloured-icon"><i class="icon fa fa-car-battery fa-3x" style="background-color: #0086ff;"></i>
+		<div class="info">
+		  <h5>Depolanan Enerji</h5>
+		  <p><b>0</b> WH (Tahmini)</p>
+		 <div class="progress">
+		  <div class="progress-bar" role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+		</div>
+		</div>
+	  </div>
+	</div>
+	<div class="col-md-6 col-lg-4" id="alinan-guc">
+	  <div class="widget-small warning coloured-icon"><i class="icon fa fa-solar-panel fa-3x" style="background-color: #8b4513;"></i>
+		<div class="info">
+		  <h5>Alınan Güç</h5>
+		  <p><b>0</b> W</p>
+		 <div class="progress">
+		  <div class="progress-bar" role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+		</div>
+		</div>
+	  </div>
+	</div>
+	<div class="col-md-6 col-lg-4" id="verilen-guc">
+	  <div class="widget-small danger coloured-icon"><i class="icon fa fa-bolt  fa-3x" style="background-color: #212529;"></i>
+		<div class="info">
+		  <h5>Verilen Güç</h5>
+		  <p><b>0</b> W</p>
+		 <div class="progress">
+		  <div class="progress-bar" role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+		</div>
+		</div>
+	  </div>
+	</div>
+  </div>
+  <div class="row">
+  
+	<div class="col-md-12">
+	  <div class="tile">
+		<h3 class="tile-title">İşlemler</h3>
+		<div class="container">
+			<center>
+				<div class="row">
+					<div class="col-lg-3 col-md-4 col-sm-6">
+					<button id="bahce-btn" title="Aydınlatmayı ayarlar." type="button" class="btn btn-circle btn-lg islem"><em class="far fa-lightbulb"></em></button>
+					<p>Bahçe</p></div>
+					<div class="col-lg-3 col-md-4 col-sm-6">
+					<button id="lavabo-btn" title="Aydınlatmayı ayarlar." type="button" class="btn btn-circle btn-lg islem"><em class="far fa-lightbulb"></em></button>
+					<p>Lavabo</p></div>
+					<div class="col-lg-3 col-md-4 col-sm-6">
+					<button onclick="oda();" id="oda-btn" title="Aydınlatmayı ayarlar." type="button" class="btn btn-circle btn-lg islem"><em class="far fa-lightbulb"></em></button>
+					<p>Oda</p></div>
+					<div class="col-lg-3 col-md-4 col-sm-6">
+					<button onclick="salon();" id="salon-btn" title="Aydınlatmayı ayarlar." type="button" class="btn btn-circle btn-lg islem"><em class="far fa-lightbulb"></em></button>
+					<p>Salon</p></div>
+					<div class="col-lg-3 col-md-4 col-sm-6">
+					<button onclick="inverter();" id="inverter-btn" title="Inverter'ı ayarlar." type="button" class="btn btn-circle btn-lg islem"><em class="fas fa-plug"></em></button>
+					<p>Inverter</p></div>
+					<div class="col-lg-3 col-md-4 col-sm-6">
+					<button id="sogutma-btn" title="Soğutmayı ayarlar." type="button" class="btn btn-circle btn-lg islem"><em class="far fa-snowflake"></em></button>
+					<p>Soğutma</p></div>
+					<div class="col-lg-3 col-md-4 col-sm-6">
+					<button onclick="reset();" title="Arduino'yu yeniden başlatır." type="button" class="btn btn-circle btn-lg islem"><em class="fas fa-redo"></em></button>
+					<p>Reset</p></div>
+				</div>
+			</center>
+		</div>
+	  </div>
+	</div>
+   </div>
+  
+<button type="button" class="btn btn-secondary" onclick="cizelgeleriBoyutlandir();" style="margin-bottom: 2px;"><i class="fas fa-expand-arrows-alt"></i></button>
+  
+  <div class="row">
+  
+	<div class="col-md-6">
+	  <div class="tile">
+		<h3 class="tile-title">Depolanan Enerji</h3>
+		WH (Tahmini)
+		<div class="embed-responsive embed-responsive-16by9">
+		  <canvas class="embed-responsive-item" id="depolanan-enerji-cizelgesi"></canvas>
+		</div>
+	  </div>
+	</div>
+	<div class="col-md-6">
+	  <div class="tile">
+		<h3 class="tile-title"><span style="color: rgba(231,163,0,1);">Alınan</span>/<span style="color: rgba(139,0,0,1);">Verilen</span> Güç</h3>
+		W
+		<div class="embed-responsive embed-responsive-16by9">
+		  <canvas class="embed-responsive-item" id="alinan-verilen-guc-cizelgesi"></canvas>
+		</div>
+	  </div>
+	</div>
+  </div>
+</main>
+<main class="app-content" id="ayarlar" style="display: none;">
+<form action="#">
+<div class="form-group row">
+  <label class="control-label col-sm-3" id="cfg_dSiniri">donguSiniri</label>
+	  <div class="col-sm-3">          
+		<input type="text" class="form-control">	
+	  </div>
+	<button type="button" class="btn btn-warning col-sm-1" onclick="ayarKaydetBtn(this);"><i class="fas fa-save"></i></button> 
+</div>
+<div class="form-group row">
+  <label class="control-label col-sm-3" id="cfg_panelVC">panelVoltCarpani</label>
+	  <div class="col-sm-3">          
+		<input type="text" class="form-control">	
+	  </div>
+	<button type="button" class="btn btn-warning col-sm-1" onclick="ayarKaydetBtn(this);"><i class="fas fa-save"></i></button> 
+</div>
+<div class="form-group row">
+  <label class="control-label col-sm-3" id="cfg_akuVC">akuVoltCarpani</label>
+	  <div class="col-sm-3">          
+		<input type="text" class="form-control">	
+	  </div>
+	<button type="button" class="btn btn-warning col-sm-1" onclick="ayarKaydetBtn(this);"><i class="fas fa-save"></i></button> 
+</div> 
+<div class="form-group row">
+  <label class="control-label col-sm-3" id="cfg_akuAC">akuAmperCarpani</label>
+	  <div class="col-sm-3">          
+		<input type="text" class="form-control">	
+	  </div>
+	<button type="button" class="btn btn-warning col-sm-1" onclick="ayarKaydetBtn(this);"><i class="fas fa-save"></i></button> 
+</div>
+<div class="form-group row">
+  <label class="control-label col-sm-3" id="cfg_panelAC">panelAmperCarpani</label>
+	  <div class="col-sm-3">          
+		<input type="text" class="form-control">	
+	  </div>
+	<button type="button" class="btn btn-warning col-sm-1" onclick="ayarKaydetBtn(this);"><i class="fas fa-save"></i></button> 
+</div> 
+<div class="form-group row">
+  <label class="control-label col-sm-3" id="cfg_tAkuGC">tahminiAkuGerilimiCarpani</label>
+	  <div class="col-sm-3">          
+		<input type="text" class="form-control">	
+	  </div>
+	<button type="button" class="btn btn-warning col-sm-1" onclick="ayarKaydetBtn(this);"><i class="fas fa-save"></i></button> 
+</div>
+<div class="form-group row">
+  <label class="control-label col-sm-3" id="cfg_akuAE">akuAkimEk</label>
+	  <div class="col-sm-3">          
+		<input type="text" class="form-control">	
+	  </div>
+	<button type="button" class="btn btn-warning col-sm-1" onclick="ayarKaydetBtn(this);"><i class="fas fa-save"></i></button> 
+</div> 
+<div class="form-group row">
+  <label class="control-label col-sm-3" id="cfg_sensorAF">sensorAmperFarki</label>
+	  <div class="col-sm-3">          
+		<input type="text" class="form-control">	
+	  </div>
+	<button type="button" class="btn btn-warning col-sm-1" onclick="ayarKaydetBtn(this);"><i class="fas fa-save"></i></button> 
+</div>
+<div class="form-group row">
+  <label class="control-label col-sm-3" id="cfg_fanPA">fanPanelAmperi</label>
+	  <div class="col-sm-3">          
+		<input type="text" class="form-control">	
+	  </div>
+	<button type="button" class="btn btn-warning col-sm-1" onclick="ayarKaydetBtn(this);"><i class="fas fa-save"></i></button> 
+</div>
+<div class="form-group row">
+  <label class="control-label col-sm-3" id="cfg_fanAA">fanAkuAmperi</label>
+	  <div class="col-sm-3">          
+		<input type="text" class="form-control">	
+	  </div>
+	<button type="button" class="btn btn-warning col-sm-1" onclick="ayarKaydetBtn(this);"><i class="fas fa-save"></i></button> 
+</div>
+<div class="form-group row">
+  <label class="control-label col-sm-3" id="cfg_aPV">aydinlatmaPanelVoltu</label>
+	  <div class="col-sm-3">          
+		<input type="text" class="form-control">	
+	  </div>
+	<button type="button" class="btn btn-warning col-sm-1" onclick="ayarKaydetBtn(this);"><i class="fas fa-save"></i></button> 
+</div>
+<div class="form-group row">
+  <label class="control-label col-sm-3" id="cfg_aAAV">aydinlatmaAcmaAkuVoltu</label>
+	  <div class="col-sm-3">          
+		<input type="text" class="form-control">	
+	  </div>
+	<button type="button" class="btn btn-warning col-sm-1" onclick="ayarKaydetBtn(this);"><i class="fas fa-save"></i></button> 
+</div>
+<div class="form-group row">
+  <label class="control-label col-sm-3" id="cfg_bAKAV">bahceAydinlatmaKapatmaAkuVoltu</label>
+	  <div class="col-sm-3">          
+		<input type="text" class="form-control">	
+	  </div>
+	<button type="button" class="btn btn-warning col-sm-1" onclick="ayarKaydetBtn(this);"><i class="fas fa-save"></i></button> 
+</div>
+<div class="form-group row">
+  <label class="control-label col-sm-3" id="cfg_lAKAV">lavaboAydinlatmaKapatmaAkuVoltu</label>
+	  <div class="col-sm-3">          
+		<input type="text" class="form-control">	
+	  </div>
+	<button type="button" class="btn btn-warning col-sm-1" onclick="ayarKaydetBtn(this);"><i class="fas fa-save"></i></button> 
+</div>
+<div class="form-group row">
+  <label class="control-label col-sm-3" id="cfg_gFS">geciciFanSiniri</label>
+	  <div class="col-sm-3">          
+		<input type="text" class="form-control">	
+	  </div>
+	<button type="button" class="btn btn-warning col-sm-1" onclick="ayarKaydetBtn(this);"><i class="fas fa-save"></i></button> 
+</div>
+<div class="form-group row">
+  <label class="control-label col-sm-3" id="cfg_gAS">geciciAydinlatmaSiniri</label>
+	  <div class="col-sm-3">          
+		<input type="text" class="form-control">	
+	  </div>
+	<button type="button" class="btn btn-warning col-sm-1" onclick="ayarKaydetBtn(this);"><i class="fas fa-save"></i></button> 
+</div>
+<div class="form-group row">
+  <label class="control-label col-sm-3" id="cfg_fanA">fanAyari</label>
+	  <div class="col-sm-3">          
+		<input type="text" class="form-control">	
+	  </div>
+</div>
+<div class="form-group row">
+  <label class="control-label col-sm-3" id="cfg_bAA">bahceAydinlatmaAyari</label>
+	  <div class="col-sm-3">          
+		<input type="text" class="form-control">	
+	  </div>
+</div>
+<div class="form-group row">
+  <label class="control-label col-sm-3" id="cfg_lAA">lavaboAydinlatmaAyari</label>
+	  <div class="col-sm-3">          
+		<input type="text" class="form-control">	
+	  </div>
+</div>
+<div class="form-group row">
+  <label class="control-label col-sm-3" id="cfg_aAS">akuAkimSiniri</label>
+	  <div class="col-sm-3">          
+		<input type="text" class="form-control">	
+	  </div>
+	<button type="button" class="btn btn-warning col-sm-1" onclick="ayarKaydetBtn(this);"><i class="fas fa-save"></i></button> 
+</div>
+<div class="form-group row">
+  <label class="control-label col-sm-3" id="cfg_pEYA">panelEnYuksekAkim</label>
+	  <div class="col-sm-3">          
+		<input type="text" class="form-control">	
+	  </div>
+	<button type="button" class="btn btn-warning col-sm-1" onclick="ayarKaydetBtn(this);"><i class="fas fa-save"></i></button> 
+</div>
+<div class="form-group row">
+  <label class="control-label col-sm-3" id="cfg_dDV">derinDesarjVoltu</label>
+	  <div class="col-sm-3">          
+		<input type="text" class="form-control">	
+	  </div>
+	<button type="button" class="btn btn-warning col-sm-1" onclick="ayarKaydetBtn(this);"><i class="fas fa-save"></i></button> 
+</div>
+<div class="form-group row">
+  <label class="control-label col-sm-3" id="cfg_pSBV">panelSarjBaslangicVoltu</label>
+	  <div class="col-sm-3">          
+		<input type="text" class="form-control">	
+	  </div>
+	<button type="button" class="btn btn-warning col-sm-1" onclick="ayarKaydetBtn(this);"><i class="fas fa-save"></i></button> 
+</div>
+<div class="form-group row">
+  <label class="control-label col-sm-3" id="cfg_aSBV">akuSarjBaslangicVoltu</label>
+	  <div class="col-sm-3">          
+		<input type="text" class="form-control">	
+	  </div>
+	<button type="button" class="btn btn-warning col-sm-1" onclick="ayarKaydetBtn(this);"><i class="fas fa-save"></i></button> 
+</div>
+<div class="form-group row">
+  <label class="control-label col-sm-3" id="cfg_pSDA">panelSarjDurdurmaAmperi</label>
+	  <div class="col-sm-3">          
+		<input type="text" class="form-control">	
+	  </div>
+	<button type="button" class="btn btn-warning col-sm-1" onclick="ayarKaydetBtn(this);"><i class="fas fa-save"></i></button> 
+</div>
+<div class="form-group row">
+  <label class="control-label col-sm-3" id="cfg_aSDV">akuSarjDurdurmaVoltu</label>
+	  <div class="col-sm-3">          
+		<input type="text" class="form-control">	
+	  </div>
+	<button type="button" class="btn btn-warning col-sm-1" onclick="ayarKaydetBtn(this);"><i class="fas fa-save"></i></button> 
+</div>
+<div class="form-group row">
+  <label class="control-label col-sm-3" id="cfg_gGS">gormezdenGelmeSayisi</label>
+	  <div class="col-sm-3">          
+		<input type="text" class="form-control">	
+	  </div>
+	<button type="button" class="btn btn-warning col-sm-1" onclick="ayarKaydetBtn(this);"><i class="fas fa-save"></i></button> 
+</div>
+<div class="form-group row">
+  <label class="control-label col-sm-3" id="cfg_aGP">akuGerilimPini</label>
+	  <div class="col-sm-3">          
+		<input type="text" class="form-control">	
+	  </div>
+	<button type="button" class="btn btn-warning col-sm-1" onclick="ayarKaydetBtn(this);"><i class="fas fa-save"></i></button> 
+</div>
+<div class="form-group row">
+  <label class="control-label col-sm-3" id="cfg_pGP">panelGerilimPini</label>
+	  <div class="col-sm-3">          
+		<input type="text" class="form-control">	
+	  </div>
+	<button type="button" class="btn btn-warning col-sm-1" onclick="ayarKaydetBtn(this);"><i class="fas fa-save"></i></button> 
+</div>
+<div class="form-group row">
+  <label class="control-label col-sm-3" id="cfg_pAP">panelAkimPini</label>
+	  <div class="col-sm-3">          
+		<input type="text" class="form-control">	
+	  </div>
+	<button type="button" class="btn btn-warning col-sm-1" onclick="ayarKaydetBtn(this);"><i class="fas fa-save"></i></button> 
+</div>
+<div class="form-group row">
+  <label class="control-label col-sm-3" id="cfg_aAP">akuAkimPini</label>
+	  <div class="col-sm-3">          
+		<input type="text" class="form-control">	
+	  </div>
+	<button type="button" class="btn btn-warning col-sm-1" onclick="ayarKaydetBtn(this);"><i class="fas fa-save"></i></button> 
+</div>
+<div class="form-group row">
+  <label class="control-label col-sm-3" id="cfg_role1">role1</label>
+	  <div class="col-sm-3">          
+		<input type="text" class="form-control">	
+	  </div>
+	<button type="button" class="btn btn-warning col-sm-1" onclick="ayarKaydetBtn(this);"><i class="fas fa-save"></i></button> 
+</div>
+<div class="form-group row">
+  <label class="control-label col-sm-3" id="cfg_fanR">fanR</label>
+	  <div class="col-sm-3">          
+		<input type="text" class="form-control">	
+	  </div>
+	<button type="button" class="btn btn-warning col-sm-1" onclick="ayarKaydetBtn(this);"><i class="fas fa-save"></i></button> 
+</div>
+<div class="form-group row">
+  <label class="control-label col-sm-3" id="cfg_bahceR">bahceR</label>
+	  <div class="col-sm-3">          
+		<input type="text" class="form-control">	
+	  </div>
+	<button type="button" class="btn btn-warning col-sm-1" onclick="ayarKaydetBtn(this);"><i class="fas fa-save"></i></button> 
+</div>
+<div class="form-group row">
+  <label class="control-label col-sm-3" id="cfg_lavaboR">lavaboR</label>
+	  <div class="col-sm-3">          
+		<input type="text" class="form-control">	
+	  </div>
+	<button type="button" class="btn btn-warning col-sm-1" onclick="ayarKaydetBtn(this);"><i class="fas fa-save"></i></button> 
+</div>
+<div class="form-group row">
+  <label class="control-label col-sm-3" id="cfg_inverterR">inverterR</label>
+	  <div class="col-sm-3">          
+		<input type="text" class="form-control">	
+	  </div>
+	<button type="button" class="btn btn-warning col-sm-1" onclick="ayarKaydetBtn(this);"><i class="fas fa-save"></i></button> 
+</div>
+<div class="form-group row">
+  <label class="control-label col-sm-3" id="cfg_salonR">salonR</label>
+	  <div class="col-sm-3">          
+		<input type="text" class="form-control">	
+	  </div>
+	<button type="button" class="btn btn-warning col-sm-1" onclick="ayarKaydetBtn(this);"><i class="fas fa-save"></i></button> 
+</div>
+<div class="form-group row">
+  <label class="control-label col-sm-3" id="cfg_odaR">odaR</label>
+	  <div class="col-sm-3">          
+		<input type="text" class="form-control">	
+	  </div>
+	<button type="button" class="btn btn-warning col-sm-1" onclick="ayarKaydetBtn(this);"><i class="fas fa-save"></i></button> 
+</div>
+<div class="form-group row">
+  <label class="control-label col-sm-3" id="cfg_panelR">panelR</label>
+	  <div class="col-sm-3">          
+		<input type="text" class="form-control">	
+	  </div>
+	<button type="button" class="btn btn-warning col-sm-1" onclick="ayarKaydetBtn(this);"><i class="fas fa-save"></i></button> 
+</div>
+<div class="form-group row">
+  <label class="control-label col-sm-3" id="cfg_yonetici">yonetici</label>
+	  <div class="col-sm-3">          
+		<input type="text" class="form-control">	
+	  </div> 
+</div>
+<div class="form-group row">
+  <label class="control-label col-sm-3" id="cfg_key">key</label>
+	  <div class="col-sm-3">          
+		<input type="text" class="form-control">	
+	  </div>
+</div>
+<div class="form-group row">
+  <label class="control-label col-sm-3" id="cfg_kullanici">kullanici</label>
+	  <div class="col-sm-3">          
+		<input type="text" class="form-control">	
+	  </div> 
+</div>
+<div class="form-group row">
+  <label class="control-label col-sm-3" id="cfg_corsS">corsSiteleri</label>
+	  <div class="col-sm-3">          
+		<input type="text" class="form-control">	
+	  </div>
+	<button type="button" class="btn btn-warning col-sm-1" onclick="ayarKaydetBtn(this);"><i class="fas fa-save"></i></button> 
+</div>
+</form>
+
+</main>
+<main class="app-content" id="kalibrasyon" style="display: none;">
+<h3>Sensörler</h3>
+<p>Olması gereken voltu/amperi sağdaki kutucuğa yazıp kaydedin.</p>
+<div class="form-group row">
+  <label class="control-label col-sm-2">Akü Gerilim Sensörü:</label>
+	  <div class="col-sm-2">
+		<input type="text" class="form-control" value="0" id="akuV" disabled>	
+	  </div>
+	  <div class="col-sm-2">
+		<input type="text" class="form-control" id="akuVC">	
+	  </div>
+	<button type="button" class="btn btn-warning col-sm-1" onclick="akuVC();"><i class="fas fa-save"></i></button> 
+</div>
+<div class="form-group row">
+  <label class="control-label col-sm-2">Panel Gerilim Sens.:</label>
+	  <div class="col-sm-2">
+		<input type="text" class="form-control" id="panelV" disabled>	
+	  </div>
+	  <div class="col-sm-2">
+		<input type="text" class="form-control" id="panelVC">	
+	  </div>
+	<button type="button" class="btn btn-warning col-sm-1" onclick="panelVC();"><i class="fas fa-save"></i></button> 
+</div>
+<div class="form-group row">
+  <label class="control-label col-sm-2">Akü Akım Sensörü:</label>
+	  <div class="col-sm-2">
+		<input type="text" class="form-control" id="akuA" disabled>	
+	  </div>
+	  <div class="col-sm-2">
+		<input type="text" class="form-control" id="akuAC">
+	  </div>
+	<button type="button" class="btn btn-warning col-sm-1" onclick="akuAC();"><i class="fas fa-save"></i></button> 
+</div>
+<div class="form-group row">
+  <label class="control-label col-sm-2">Panel Akım Sensörü:</label>
+	  <div class="col-sm-2">
+		<input type="text" class="form-control" id="panelA" disabled>	
+	  </div>
+	  <div class="col-sm-2">
+		<input type="text" class="form-control" id="panelAC">
+	  </div>
+	<button type="button" class="btn btn-warning col-sm-1" onclick="panelAC();"><i class="fas fa-save"></i></button> 
+</div>
+<button type="button" class="btn btn-warning" onclick="akuSensorunuSifirla();">Akü Akım Sensörünü Sıfırla</button> 
+<button type="button" class="btn btn-warning" onclick="panelSensorunuSifirla();">Panel Akım Sensörünü Sıfırla</button> 
+<h3>Tahmini Depolanan Enerji</h3>
+<p>Aküde kaç WH depolandığının tahmin edilebilmesini sağlamak için bu özelliği kullanın. 
+Akü tam doluyken sabit akım çekin. Çekilen akımın amperini(Arduino aküye bağlıysa Arduino'nun çektiği akımı dahil edin) aşağıdaki kutucağa yazın ve başlatın. 
+Akünün gerilimi 10.8v'un altına düştüğünde kalibrasyon tamamlanacaktır. Bu sırada sayfayı kapatmayın ve aküyü şarj etmeyin.<br>
+İşlem sırasında toplam kullanılan enerji akünün gerilimi düştükçe WH bölümüne yazılacak.
+</p>
+
+<div class="form-group row">
+  <label class="control-label col-sm-2">Çekilecek Akım:</label>
+	  <div class="col-sm-2">
+		<input type="text" class="form-control" id="wh-kalibrasyon-amperi">	
+	  </div>
+</div>
+<div class="form-group row">
+  <label class="control-label col-sm-2">WH:</label>
+	  <div class="col-sm-2">
+		<input type="text" class="form-control" id="wh-kalibrasyon-toplam" disabled>
+	  </div>
+</div>
+<button type="button" class="btn btn-warning col-sm-1" id="wh-kalibrasyon-butonu" onclick="wHKalibrasyonuBaslat();">Başlat</button> 
+</main>
+<main class="app-content" id="kullanici" style="display: none;">
+
+				<div class="form-group col-md-3">
+					<label class="control-label">Şu anki parola:</label>
+					<input class="form-control" type="password" id="parola">
+				</div>
+			   <h3>Parola Değiştir</h3>
+				<div class="form-group col-md-3">
+					<label class="control-label">Yeni parola:</label>
+					<input class="form-control" type="password" id="yeni-parola">
+				</div>
+				<div class="form-group col-md-3">
+					<label class="control-label">Yeni parola doğrulama:</label>
+					<input class="form-control" type="password" id="yeni-parola-dogrulama">
+				</div>
+				<div class="form-group col-md-4 align-self-end">
+					<button class="btn btn-primary" type="button" onclick="parolaDegistir();"><i class="fa fa-fw fa-lg fa-lock"></i>Gönder</button>
+			   </div>
+			   <h3>Kullanıcı Adı Değiştir</h3>
+				<div class="form-group col-md-3">
+					<label class="control-label">Yönetici:</label>
+					<input class="form-control" type="text" id="yonetici-adi">
+				</div>
+				<div class="form-group col-md-4 align-self-end">
+					<button class="btn btn-primary" type="button" onclick="yoneticiAdiDegistir();"><i class="fa fa-fw fa-lg fa-lock"></i>Gönder</button>
+			   </div>
+				<div class="form-group col-md-3">
+					<label class="control-label">Kullanıcı:</label>
+					<input class="form-control" type="text" id="kullanici-adi">
+				</div>
+				<div class="form-group col-md-4 align-self-end">
+					<button class="btn btn-primary" type="button" onclick="kullaniciAdiDegistir();"><i class="fa fa-fw fa-lg fa-lock"></i>Gönder</button>
+			   </div>
+</main>
+<main class="app-content" id="dosya" style="display: none;">
+	<div class="form-group">
+		<div class="form-group row">
+			<label class="col-md-3 col-form-label">Dosya Adı:</label>
+			<div class="col-md-9">
+				<input name="regular" class="form-control" type="text" id="dosya-adi">
+			</div>
+		</div>
+		<label for="comment">Metin:</label>
+		<textarea class="form-control" rows="15" cols="100" id="metin"></textarea>
+	</div> 
+	<button type="button" class="btn btn-md btn-primary" onclick="dosyaYukle()">Yükle</button>
+	<button type="button" class="btn btn-md btn-primary" onclick="turkceKarakterleriDonustur()">Türkçe Karakterleri HTML Koduna Dönüştür</button>
+</main>
+<main class="app-content" id="loglar" style="display: none;">
+<h3>Loglar</h3>
+		 <div class="form-group">
+			<textarea class="form-control" rows="20" cols="100" id="txt_loglar" disabled></textarea>
+		</div>
+</main>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/halilselcuk/Arduino-Gunes-Enerjisi-Kontrol-Sistemi@1/web/js/gunes-enerjisi-kontrol-sistemi.js"></script>
