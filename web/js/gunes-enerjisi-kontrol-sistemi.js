@@ -38,7 +38,7 @@ else
 	}
 }
 
-//Kullanıcı yönetici değilse yönetici araçlarını arayüzden kaldır
+//Kullanıcı yöneticiyse yönetici araçlarını göster
 if(getCookie("yonetici") == "1") $(".yonetici-araci").css("display", "");
 
 //Açılışta anasayfayı aç
