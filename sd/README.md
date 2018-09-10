@@ -10,4 +10,6 @@ INDEX dosyası sayfada gerekli kütüphaneleri
 INDEX2 ve GIRIS2 dosyaları internete gerek duymadan çalışan basit sayfalardır. 
  Çevrimdışı olunduğunda basit işlemleri gerçekleştirmeye yararlar.
  
+wh.txt WH bulma bilgilerini tutan dosyadır.
+ 
 Log ve ayar dosyaları Arduino tarafından oluşturulur.
