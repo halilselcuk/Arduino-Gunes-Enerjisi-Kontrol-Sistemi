@@ -1,0 +1,91 @@
+﻿<!DOCTYPE html>
+<html lang="tr">
+  <head>
+	<meta charset="utf-8">
+	<title>Güneş Enerjisi Kontrol Sistemi</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="icon" type="image/png" sizes="1200x1200" href="https://cdn.jsdelivr.net/gh/halilselcuk/Arduino-Gunes-Enerjisi-Kontrol-Sistemi@1.3/web/favicon.png">
+	<link rel="apple-touch-icon" type="image/png" sizes="1200x1200" href="https://cdn.jsdelivr.net/gh/halilselcuk/Arduino-Gunes-Enerjisi-Kontrol-Sistemi@1.3/web/favicon-apple.png">
+    <!-- Main CSS-->
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/halilselcuk/Arduino-Gunes-Enerjisi-Kontrol-Sistemi@1.3/web/css/main.css">
+    <!-- Font-icon css-->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
+
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+
+    <!-- Essential javascripts for application to work-->
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pace/1.0.2/pace.min.js"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+  
+	<!-- Page specific javascripts-->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/halilselcuk/Arduino-Gunes-Enerjisi-Kontrol-Sistemi@1.3/web/js/chart.js"></script>
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
+	<script type="text/javascript">
+		//Giriş yapılıp yapılmadığı anlamak için bir sayfa getirilir eğer içeriği 401 ise giriş yapılmamıştır.
+		$(function() {
+			$.ajax({
+				type: 'GET',
+				url: "degerler",
+				success: function(r){
+					//Giriş yapılmadıysa giriş sayfası gösterilir.
+					if(r == "401") icerigiDegistir("giris.htm");
+					else 
+					{
+						//Giriş yapılmışsa uygulama açılır.
+						icerigiDegistir("index.htm");
+					}
+				},
+				error: function(){
+					//$("body").html('Arduino\'ya bağlanılamıyor.');
+				}
+			});
+			icerigiDegistir("index.htm");
+			$(".yonetici-araci").css("display", "");
+		});
+		function icerigiDegistir(sayfa)
+		{
+			var icerik = localStorage.getItem(sayfa);
+			//Sayfa yerel depolamaya kaydedildiyse sayfa yerel depolamadan yüklenir.
+			if(icerik != null)
+			{
+				$("body").html(icerik);
+			}
+			else
+			{
+			//Sayfa yerel depolamada yoksa sunucudan getirilir.
+			$.ajax({
+				type: 'GET',
+				url: "https://cdn.jsdelivr.net/gh/halilselcuk/Arduino-Gunes-Enerjisi-Kontrol-Sistemi@1.3/web/"+sayfa,
+				success: function(r){
+					$("body").html(r);
+					//Açılışın hızlanmasını sağlamak için alınan içerik yerel depolamaya kaydedilir.
+					//Daha sonra sayfa yüklenmek istendiğinde yerel depolamadan yüklenir.
+					localStorage.setItem(sayfa,r);
+				},
+				error: function(){
+					$("body").html('İçerik getirilemedi.');
+				},
+				async: false
+			});
+			}
+			
+			if(sayfa == "index.htm") dynamicallyLoadScript("https://cdn.jsdelivr.net/gh/halilselcuk/Arduino-Gunes-Enerjisi-Kontrol-Sistemi@1.4/web/js/gunes-enerjisi-kontrol-sistemi.js");	
+	
+		}
+		
+		function dynamicallyLoadScript(url) {
+		//https://stackoverflow.com/questions/950087/how-do-i-include-a-javascript-file-in-another-javascript-file
+			var script = document.createElement("script"); // Make a script DOM node
+			script.src = url; // Set it's src to the provided URL
+
+			document.head.appendChild(script); // Add it to the end of the head section of the page (could change 'head' to 'body' to add it to the end of the body section instead)
+		}
+	</script>
+  </head>
+  <body class="app sidebar-mini rtl">
+	
+  </body>
+</html>

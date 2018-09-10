@@ -1,0 +1,1 @@
+Bu klasördeki sayfalar örnek değerlerle çalışır. Nasıl çalıştığının anlaşılması amacıyla hazırlandı.
