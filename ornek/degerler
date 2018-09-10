@@ -1,0 +1,18 @@
+{
+  "akuV": 12.8343,
+  "panelV": 2.829405,
+  "akuA": 0.376,
+  "panelA": 0,
+  "akuTV": 12.8343,
+  "fanDurumu": 2,
+  "bahceAydinlatmaDurumu": 2,
+  "lavaboAydinlatmaDurumu": 0,
+  "role1": 1,
+  "fanR": 1,
+  "bahceR": 1,
+  "lavaboR": 1,
+  "inverterR": 1,
+  "salonR": 1,
+  "odaR": 1,
+  "panelR": 1
+}
