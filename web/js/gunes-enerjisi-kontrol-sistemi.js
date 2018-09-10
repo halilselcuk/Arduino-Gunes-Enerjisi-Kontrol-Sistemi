@@ -14,7 +14,7 @@ var ayarlar;
 //Ayarları getir
 $.ajax({
   type: 'GET',
-  url: "/cfg.txt",
+  url: "cfg.txt",
   success: function(r){
 	ayarlar = JSON.parse(r);
   },
@@ -104,7 +104,7 @@ function degerleriYenile(yineleme = true)
 {
 	$.ajax({
 	  type: 'GET',
-	  url: "/degerler",
+	  url: "degerler",
 	  success: function(r){
 		//İzinsizse giriş sayfasına yönlendir
 		if(r=="401") icerigiDegistir("giris.htm");
@@ -438,7 +438,7 @@ function komut(ad, durum)
 {
 	$.ajax({
 		type: 'POST',
-		url: "/"+ad,
+		url: ad,
 		data: "key="+getCookie("key")+"&durum="+durum,
 		success: function(r){
 			if(r[0] != "1") 
@@ -484,7 +484,7 @@ function ayarlarS()
 	//Arduino'dan güncel ayarları getir
 	$.ajax({
 	  type: 'GET',
-	  url: "/cfg.txt",
+	  url: "cfg.txt",
 	  success: function(r){
 		//Ayarları ayrıştır
 		ayarlar = JSON.parse(r);
@@ -534,7 +534,7 @@ function loglar()
 	//Logları getir ve arayüze yaz
 	$.ajax({
 	  type: 'GET',
-	  url: "/loglar.txt",
+	  url: "loglar.txt",
 	  success: function(r){
 		$("#txt_loglar").val(r);
 	  },
@@ -550,7 +550,7 @@ function parolaDegistir()
 	if($("#yeni-parola").val() == $("#yeni-parola-dogrulama").val() && $("#yeni-parola").val() != "")
 	$.ajax({
 		type: 'POST',
-		url: "/parola_degistir",
+		url: "parola_degistir",
 		data: "key="+getCookie("key")+"&parola="+$("#yeni-parola").val()+"&eski_parola="+$("#parola").val(),
 		success: function(r){
 		if(r == "yanlis_parola") toastr.error('Eski parola yanlış girildi.');
@@ -569,7 +569,7 @@ function kullaniciAdiDegistir()
 	if($("#kullanici-adi").val() != "")
 	$.ajax({
 		type: 'POST',
-		url: "/kullanici_adi_degistir",
+		url: "kullanici_adi_degistir",
 		data: "key="+getCookie("key")+"&parola="+$("#parola").val()+"&kullanici="+$("#kullanici-adi").val(),
 		success: function(r){
 		if(r == "yanlis_parola") toastr.error('Eski parola yanlış girildi.');
@@ -588,7 +588,7 @@ function yoneticiAdiDegistir()
 	if($("#yonetici-adi").val() != "")
 	$.ajax({
 		type: 'POST',
-		url: "/yonetici_adi_degistir",
+		url: "yonetici_adi_degistir",
 		data: "key="+getCookie("key")+"&parola="+$("#parola").val()+"&kullanici="+$("#yonetici-adi").val(),
 		success: function(r){
 		if(r == "yanlis_parola") toastr.error('Eski parola yanlış girildi.');
@@ -616,7 +616,7 @@ function ayarKaydet(ad, deger)
 {
 	$.ajax({
 		type: 'POST',
-		url: "/ayar",
+		url: "ayar",
 		data: "key="+getCookie("key")+"&ad="+ad+"&deger="+deger,
 		success: function(r){
 		if(r == "ayar_bulunamadi") toastr.error('Ayar bulunamadı.');
@@ -733,7 +733,7 @@ function wHGetir()
 	//Arduino'dan WH bilgilerini getirir.
 	$.ajax({
 		type: 'GET',
-		url: "/wh.txt",
+		url: "wh.txt",
 		success: function(r){
 			try
 			{
@@ -757,7 +757,7 @@ function akuVC()
 {
 	$.ajax({
 	  type: 'GET',
-	  url: "/kalibrasyon_degerleri",
+	  url: "kalibrasyon_degerleri",
 	  success: function(r){
 		var kalibrasyonDegerleri = JSON.parse(r);
 		var deger = parseFloat($("#akuVC").val()) / parseInt(kalibrasyonDegerleri["akuGV"]);
@@ -772,7 +772,7 @@ function panelVC()
 {
 	$.ajax({
 	  type: 'GET',
-	  url: "/kalibrasyon_degerleri",
+	  url: "kalibrasyon_degerleri",
 	  success: function(r){
 		var kalibrasyonDegerleri = JSON.parse(r);
 		var deger = parseFloat($("#panelVC").val()) / parseInt(kalibrasyonDegerleri["panelGV"])
@@ -787,7 +787,7 @@ function akuAC()
 {
 	$.ajax({
 	  type: 'GET',
-	  url: "/kalibrasyon_degerleri",
+	  url: "kalibrasyon_degerleri",
 	  success: function(r){
 		var kalibrasyonDegerleri = JSON.parse(r);
 		//Kalibrasyon değerini sıfırından çıkar ve olması gereken değere böl
@@ -803,7 +803,7 @@ function panelAC()
 {
 	$.ajax({
 	  type: 'GET',
-	  url: "/kalibrasyon_degerleri",
+	  url: "kalibrasyon_degerleri",
 	  success: function(r){
 		var kalibrasyonDegerleri = JSON.parse(r);
 		//Kalibrasyon değerini sıfırından çıkar ve olması gereken değere böl
@@ -819,7 +819,7 @@ function akuSensorunuSifirla()
 {
 		$.ajax({
 		type: 'POST',
-		url: "/aku_sensorunu_sifirla",
+		url: "aku_sensorunu_sifirla",
 		data: "key="+getCookie("key"),
 		success: function(r){
 			toastr.info('Güç çıkışı durdurma ve sıfırlama komutu gönderildi. Yeni sıfır: ' + r);
@@ -833,7 +833,7 @@ function panelSensorunuSifirla()
 {
 		$.ajax({
 		type: 'POST',
-		url: "/panel_sensorunu_sifirla",
+		url: "panel_sensorunu_sifirla",
 		data: "key="+getCookie("key"),
 		success: function(r){
 			toastr.info('Güç girişi durdurma ve sıfırlama komutu gönderildi. Yeni sıfır: ' + r);
@@ -864,7 +864,7 @@ function dosyaYukle()
 	toastr.info('Yükleme başlatılıyor. Tamamlanması uzun sürebilir.');
 	$.ajax({
 	  type: 'POST',
-	  url: "/sd_write?overwrite=1&dosya=" + $("#dosya-adi").val() + "&key=" + getCookie("key"),
+	  url: "sd_write?overwrite=1&dosya=" + $("#dosya-adi").val() + "&key=" + getCookie("key"),
 	  data: metin,
 	  success: function(r){
 		if(r.substring(0,6) == "dosya_") toastr.error('Dosya açılamadı. Dosya adını değiştirmeyi deneyin.');
