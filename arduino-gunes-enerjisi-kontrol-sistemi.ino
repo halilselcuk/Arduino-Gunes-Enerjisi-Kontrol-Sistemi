@@ -227,10 +227,6 @@ void loop()
 		akuA -=	akuAkimSensoruSifir;
 		panelA -= panelAkimSensoruSifir;
 
-		//Panel akım sensörününün değeri değiştiğinde sıcaklık ve akü akım sensörü etkileniyor
-		//Elektronik olarak çözülemediği için bu şekilde doğru değerler bulunmaya çalışıldı
-		//akuA -= panelA;
-
 		//Volt ve amper hesaplanır
 		akuV *= cfg.akuVoltCarpani;
 		panelV *= cfg.panelVoltCarpani;
@@ -495,13 +491,13 @@ void loop()
 							//Header'ı sonlardır
 							client.println();
 							
-							dosyaYukle("index");
+							dosyaYukle("index.html");
 							break;
 						}
 						
 						client.println("");
 						if(yol == "giris.htm") dosyaYukle("giris.htm");
-						else if(yol == "index2") dosyaYukle("giris2");
+						else if(yol == "index2.html") dosyaYukle("giris2.html");
 						else client.print("401");
 						break;
 					}
@@ -585,13 +581,13 @@ void loop()
 						//Tarayıcıya sayfayı önbelleğe almasını söyle
 						client.println("Cache-Control: max-age=315360000");
 						client.println("Cache-Control: only-if-cached");
-						//Header'ı sonlardır
+						//Header'ı sonlandır
 						client.println();
-						dosyaYukle("index");
+						dosyaYukle("index.html");
 						
 						break;
 					}
-					//Header'ı sonladır
+					//Header'ı sonlandır
 					client.println();
 					
 					if(yol == "degerler")

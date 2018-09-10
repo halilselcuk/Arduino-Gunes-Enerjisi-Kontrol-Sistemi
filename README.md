@@ -4,4 +4,4 @@ Arduino Güneş Enerjisi Kontrol Sistemi
 
 -Gerekli Arduino kütüphanelerini yükleyin.
 
--Arduino kodlarında 10. satırdaki IP adresi ayarlayın.
+-Arduino kodlarında 10. satırdaki IP adresini ayarlayın.
