@@ -491,13 +491,13 @@ void loop()
 							//Header'ı sonlardır
 							client.println();
 							
-							dosyaYukle("index.html");
+							dosyaYukle("index.htm");
 							break;
 						}
 						
 						client.println("");
 						if(yol == "giris.htm") dosyaYukle("giris.htm");
-						else if(yol == "index2.html") dosyaYukle("giris2.html");
+						else if(yol == "index2.htm") dosyaYukle("giris2.htm");
 						else client.print("401");
 						break;
 					}
@@ -583,7 +583,7 @@ void loop()
 						client.println("Cache-Control: only-if-cached");
 						//Header'ı sonlandır
 						client.println();
-						dosyaYukle("index.html");
+						dosyaYukle("index.htm");
 						
 						break;
 					}
