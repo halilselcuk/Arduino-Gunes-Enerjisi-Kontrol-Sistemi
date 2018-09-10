@@ -36,7 +36,7 @@
 					{
 						//Giriş yapılmışsa uygulama açılır.
 						icerigiDegistir("index.htm");
-						$("head").append('<scr'+'ipt type="text/javascript" src="https://cdn.jsdelivr.net/gh/halilselcuk/Arduino-Gunes-Enerjisi-Kontrol-Sistemi@1.3/web/js/gunes-enerjisi-kontrol-sistemi.js"></scr'+'ipt>"');
+						dynamicallyLoadScript("https://cdn.jsdelivr.net/gh/halilselcuk/Arduino-Gunes-Enerjisi-Kontrol-Sistemi@1.3/web/js/gunes-enerjisi-kontrol-sistemi.js");
 					}
 				},
 				error: function(){
@@ -69,6 +69,14 @@
 				},
 				async: false
 			});
+		}
+		
+		function dynamicallyLoadScript(url) {
+		//https://stackoverflow.com/questions/950087/how-do-i-include-a-javascript-file-in-another-javascript-file
+			var script = document.createElement("script"); // Make a script DOM node
+			script.src = url; // Set it's src to the provided URL
+
+			document.head.appendChild(script); // Add it to the end of the head section of the page (could change 'head' to 'body' to add it to the end of the body section instead)
 		}
 	</script>
   </head>
