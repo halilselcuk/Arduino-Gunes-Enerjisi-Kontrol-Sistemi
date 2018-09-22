@@ -569,16 +569,19 @@ void loop()
 							client.println("Set-Cookie: kullanici="+kullanici+"; Max-Age=315360000;");
 							client.println("Set-Cookie: key="+parolaMd5+"; Max-Age=315360000;");
 							if(kullanici == cfg.yonetici) client.println("Set-Cookie: yonetici=1; Max-Age=315360000;");
+							//Header'ı sonlandır
 							client.println();
+							//Sonucu yaz
 							client.print("1");
-							break;
 						}
 						else
 						{
+							//Header'ı sonlandır
 							client.println();
+							//Sonucu yaz
 							client.print("0");
-							break;
 						}
+						break;
 					}
 					
 					else if(yol == "")
@@ -588,10 +591,11 @@ void loop()
 						client.println("Cache-Control: only-if-cached");
 						//Header'ı sonlandır
 						client.println();
-						dosyaYukle("index.htm");
 						
+						dosyaYukle("index.htm");
 						break;
 					}
+					
 					//Aşağıdaki işlemlerde header'a bir şey eklenmeyeceği için header'ı burada sonlandır
 					client.println();
 					
