@@ -480,7 +480,13 @@ void loop()
 						yol = _get.substring(1, _get.length());
 					}
 					
-					if(yol != "giris" && (cookie("key") != cfg.key || !(cookie("kullanici") == cfg.yonetici || cookie("kullanici") == cfg.kullanici)))
+					if(
+						//Giriş yapılmadan erişilebilen yollar
+						(yol != "giris" || yol != "surum")
+						//Giriş yapılıp yapılmadığının denetimi
+						&& (cookie("key") != cfg.key
+						|| !(cookie("kullanici") == cfg.yonetici || cookie("kullanici") == cfg.kullanici))
+					)
 					{
 						printHeader();
 						if(yol == "")
@@ -488,7 +494,7 @@ void loop()
 							//Tarayıcıya sayfayı önbelleğe almasını söyle
 							client.println("Cache-Control: max-age=315360000");
 							client.println("Cache-Control: only-if-cached");
-							//Header'ı sonlardır
+							//Header'ı sonlandır
 							client.println();
 							
 							dosyaYukle("index.htm");
@@ -575,8 +581,7 @@ void loop()
 						}
 					}
 					
-					
-					if(yol == "")
+					else if(yol == "")
 					{
 						//Tarayıcıya sayfayı önbelleğe almasını söyle
 						client.println("Cache-Control: max-age=315360000");
@@ -587,10 +592,15 @@ void loop()
 						
 						break;
 					}
-					//Header'ı sonlandır
+					//Aşağıdaki işlemlerde header'a bir şey eklenmeyeceği için header'ı burada sonlandır
 					client.println();
 					
-					if(yol == "degerler")
+					if(yol == "surum")
+					{
+						client.println("1.4");
+					}
+					
+					else if(yol == "degerler")
 					{														
 							StaticJsonBuffer<600> jsonBuffer;
 							JsonObject& degerler = jsonBuffer.createObject();
