@@ -1,6 +1,6 @@
 #include <Ethernet.h>
 #include <SD.h>
-#include <ArduinoJson.h> //https://github.com/bblanchon/ArduinoJson
+#include <ArduinoJson.h> //https://github.com/bblanchon/ArduinoJson v5
 #include <MD5.h> //https://github.com/tzikis/ArduinoMD5
 #include <MemoryFree.h> //https://github.com/McNeight/MemoryFree
 
