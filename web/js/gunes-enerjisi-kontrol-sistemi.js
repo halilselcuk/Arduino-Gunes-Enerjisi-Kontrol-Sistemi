@@ -446,11 +446,11 @@ function komut(ad, durum)
 				toastr.error('Komut gönderilemedi.');
 				return;
 			}
-			if(durum == 0) toastr.info('Kalıcı kapatma komutu gönderildi.');
-			if(durum == 1) toastr.info('Kalıcı açma komutu gönderildi.');
+			if(durum == 0) toastr.info('Kapatma komutu gönderildi.');
+			if(durum == 1) toastr.info('Açma komutu gönderildi.');
 			if(durum == 2) toastr.info('Otomatik ayar komutu gönderildi.');
-			if(durum == 3) toastr.info('Açma komutu gönderildi.');
-			if(durum == 4) toastr.info('Kapatma komutu gönderildi.');
+			if(durum == 3) toastr.info('Geçici açma komutu gönderildi.');
+			if(durum == 4) toastr.info('Geçici kapatma komutu gönderildi.');
 			//Komut gönderildikten sonra arayüzdeki verileri güncelle
 			degerleriYenile(false);
 		},
