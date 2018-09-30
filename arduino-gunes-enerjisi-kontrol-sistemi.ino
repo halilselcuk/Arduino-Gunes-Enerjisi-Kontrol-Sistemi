@@ -482,7 +482,7 @@ void loop()
 					
 					if(
 						//Giriş yapılmadan erişilebilen yollar
-						(yol != "giris" || yol != "surum")
+						(yol != "giris" && yol != "surum")
 						//Giriş yapılıp yapılmadığının denetimi
 						&& (cookie("key") != cfg.key
 						|| !(cookie("kullanici") == cfg.yonetici || cookie("kullanici") == cfg.kullanici))
