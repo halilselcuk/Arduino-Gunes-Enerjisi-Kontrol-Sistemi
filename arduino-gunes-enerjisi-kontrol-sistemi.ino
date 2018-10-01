@@ -110,7 +110,7 @@ struct Config {
 
 const char *configFile = "cfg.txt";	// <- SD library uses 8.3 filenames
 const char *configFileBackup = "cfg-b.txt";
-Config cfg;												 // <- global configuration object
+Config cfg;						 	// <- global configuration object
 
 void setup()
 {
