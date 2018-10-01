@@ -136,7 +136,7 @@ function degerleriYenile(yineleme = true)
 		$("#depolanan-enerji b").html(akuWH);
 		
 		//Alınan güç hesabı. 14.5 = regülatörün gerilimi
-		var alinanW = parseInt((14.5 * degerler.panelA).toFixed(0));
+		var alinanW = parseInt((ayarlar.sV * degerler.panelA).toFixed(0));
 		//Güç girişi yoksa
 		if(degerler.panelR == 1)
 		{

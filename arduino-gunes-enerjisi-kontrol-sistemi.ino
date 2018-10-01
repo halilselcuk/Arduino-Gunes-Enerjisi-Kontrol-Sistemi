@@ -81,6 +81,7 @@ struct Config {
 	int bahceAydinlatmaAyari;
 	int lavaboAydinlatmaAyari;
 	double panelEnYuksekAkim;
+	double sarjVoltu;
 	double akuAkimSiniri;
 	double derinDesarjVoltu;
 	double panelSarjBaslangicVoltu;
@@ -1028,6 +1029,10 @@ void loop()
 								{
 									cfg.panelEnYuksekAkim = deger.toDouble();
 								}
+								else if(ad == "sarjVoltu")
+								{
+									cfg.sarjVoltu = deger.toDouble();
+								}
 								else if(ad == "akuAkimSiniri")
 								{
 									cfg.akuAkimSiniri = deger.toDouble();
@@ -1435,8 +1440,11 @@ void loadConfiguration() {
 	cfg.bahceAydinlatmaAyari = root["bAA"] | 2;
 	cfg.lavaboAydinlatmaAyari = root["lAA"] | 2;
 
-	//Panelden çekilebilecek en yüksek akım. Sadece arayüzde yüzde hesabı için kullanılır
+	//Panelden çekilebilecek en yüksek akım. Arayüzde yüzde hesabı için kullanılır
 	cfg.panelEnYuksekAkim = root["pEYA"] | 3.2;
+	//Alınan gücün gerilimi. Arayüzde alınan güç hesabı için kullanılır
+	cfg.sarjVoltu = root["sV"] | 14.5;
+	
 	//Aküden çekilen akım kaç amperi geçtiğinde gücün kesileceği
 	cfg.akuAkimSiniri = root["aAS"] | 18;
 	//Akünün gerilimi kaç voltun altına düşerse gücün kesileceği
@@ -1529,6 +1537,7 @@ int updateConfig(String cfgF) {
 	root["bAA"] = cfg.bahceAydinlatmaAyari;
 	root["lAA"] = cfg.lavaboAydinlatmaAyari;
 	root["pEYA"] = cfg.panelEnYuksekAkim;
+	root["sV"] = cfg.sarjVoltu;
 	root["aAS"] = cfg.akuAkimSiniri;
 	root["dDV"] = cfg.derinDesarjVoltu;
 	root["pSBV"] = cfg.panelSarjBaslangicVoltu;
