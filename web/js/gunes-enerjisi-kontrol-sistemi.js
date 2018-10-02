@@ -261,7 +261,7 @@ function degerleriYenile(yineleme = true)
 			depolananEnerjiCizelgesi.removeData();
 			
 			//Toplanan verilerin ortalamasını alıp çizelgenin sonuna ekle
-			depolananEnerjiCizelgesi.addData([parseInt(depolananEnerjiToplam/veriSayisi)], saatDakika());
+			depolananEnerjiCizelgesi.addData([parseInt(depolananEnerjiToplam/veriSayisi).toFixed(0)], saatDakika());
 			depolananEnerjiToplam = 0;
 			
 			
@@ -270,7 +270,7 @@ function degerleriYenile(yineleme = true)
 			alinanVerilenGucCizelgesi.removeData();
 			
 			//Toplanan verilerin ortalamasını alıp çizelgenin sonuna ekle
-			alinanVerilenGucCizelgesi.addData([Math.abs(alinanGucToplam/veriSayisi), Math.abs(verilenGucToplam/veriSayisi)], saatDakika());
+			alinanVerilenGucCizelgesi.addData([Math.abs(alinanGucToplam/veriSayisi).toFixed(0), Math.abs(verilenGucToplam/veriSayisi).toFixed(0)], saatDakika());
 			alinanGucToplam = 0;
 			verilenGucToplam = 0;
 			
