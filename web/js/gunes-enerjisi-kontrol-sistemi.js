@@ -59,45 +59,82 @@ if(localStorage.getItem("cizelge-boyutu") == "1")
 }
 
 //Çizelgeleri hazırla
-var canvas = $("#alinan-verilen-guc-cizelgesi").get(0).getContext("2d");
-var alinanVerilenGucCizelgesi = new Chart(canvas).Line({
-labels : [],
-datasets: [
-	{
-		label: "Alinan",
-		fillColor: "rgba(253,184,19,0.4)",
-		strokeColor: "rgba(253,184,19,1)",
-		pointColor: "rgba(253,184,19,1)",
-		pointStrokeColor: "#fff",
-		pointHighlightFill: "#fff",
-		pointHighlightStroke: "rgba(220,220,220,1)"
-	},
-	{
-		label: "Verilen",
-		fillColor: "rgba(139,0,0,0.7)",
-		strokeColor: "rgba(139,0,0,1)",
-		pointColor: "rgba(139,0,0,1)",
-		pointStrokeColor: "#fff",
-		pointHighlightFill: "#fff",
-		pointHighlightStroke: "rgba(220,220,220,1)"
-	}
-]
+var canvas = document.getElementById("alinan-verilen-guc-cizelgesi").getContext('2d');
+var alinanVerilenGucCizelgesi = new Chart(canvas, {
+    type: 'line',
+    data: {
+			datasets: [
+			{
+				label: "Alınan",
+				backgroundColor: "rgb(253,184,19)",
+				borderColor: "rgb(253,184,19)",
+				fill: false
+			},
+			{
+				label: "Verilen",
+				backgroundColor: "rgb(139,0,0)",
+				borderColor: "rgb(139,0,0)",
+				fill: false
+			}
+		]},
+		options: {
+			responsive: true,
+			title: {
+				display: true,
+				text: 'Alınan/Verilen Güç'
+			},
+			scales: {
+				xAxes: [{
+					display: true,
+					scaleLabel: {
+						display: true,
+						labelString: 'Zaman'
+					}
+				}],
+				yAxes: [{
+					display: true,
+					scaleLabel: {
+						display: true,
+						labelString: 'W'
+					}
+				}]
+			}
+		}
 });
-var canvas2 = $("#depolanan-enerji-cizelgesi").get(0).getContext("2d");
-var depolananEnerjiCizelgesi = new Chart(canvas2).Line(
-{
-labels : [],
-datasets: [
-{
-	label: "Enerji",
-	fillColor: "rgba(0, 134, 255,0.6)",
-	strokeColor: "rgba(0, 134, 255,1)",
-	pointColor: "rgba(0, 134, 255,1)",
-	pointStrokeColor: "#fff",
-	pointHighlightFill: "#fff",
-	pointHighlightStroke: "rgba(220,220,220,1)"
-}
-]
+var canvas2 = document.getElementById("depolanan-enerji-cizelgesi").getContext('2d');
+var depolananEnerjiCizelgesi = new Chart(canvas2, {
+    type: 'line',
+    data: {
+			datasets: [
+			{
+				label: "Enerji",
+				backgroundColor: "rgba(0, 134, 255, 0.99)",
+				fill: true
+			}
+		]},
+		options: {
+			responsive: true,
+			title: {
+				display: true,
+				text: 'Depolanan Enerji (Tahmini)'
+			},
+			scales: {
+				xAxes: [{
+					display: true,
+					scaleLabel: {
+						display: true,
+						labelString: 'Zaman'
+					}
+				}],
+				yAxes: [{
+					display: true,
+					scaleLabel: {
+						display: true,
+						labelString: 'WH'
+					}
+				}]
+			}
+		}
 });
 
 function degerleriYenile(yineleme = true)
@@ -238,8 +275,16 @@ function degerleriYenile(yineleme = true)
 		if(dakika == null) 
 		{
 			//Değerleri çizelgelere ekle
-			depolananEnerjiCizelgesi.addData([akuWH], saatDakika());
-			alinanVerilenGucCizelgesi.addData([Math.abs(alinanW), Math.abs(verilenW)], saatDakika());
+			
+			depolananEnerjiCizelgesi.data.labels.push(saatDakika());
+			depolananEnerjiCizelgesi.data.datasets[0].data.push(akuWH);
+			depolananEnerjiCizelgesi.update();
+			
+			alinanVerilenGucCizelgesi.data.labels.push(saatDakika());
+			alinanVerilenGucCizelgesi.data.datasets[0].data.push(Math.abs(alinanW));
+			alinanVerilenGucCizelgesi.data.datasets[1].data.push(Math.abs(verilenW));
+			alinanVerilenGucCizelgesi.update();
+			
 			//Eklendiği dakikayı tut
 			dakika = d.getMinutes();
 		}
@@ -256,21 +301,30 @@ function degerleriYenile(yineleme = true)
 		//Dakika değiştiyse
 		if(dakika != d.getMinutes())
 		{
-			//Eklenen veri sayısı 15'i geçtiyse en baştaki veriyi sil
-			if(depolananEnerjiCizelgesi.datasets[0].points.length > 15)
-			depolananEnerjiCizelgesi.removeData();
+			//Eklenen veri sayısı fazlaysa en baştaki veriyi sil
+			if(depolananEnerjiCizelgesi.data.labels.length > 120)
+			removeData(depolananEnerjiCizelgesi);
 			
 			//Toplanan verilerin ortalamasını alıp çizelgenin sonuna ekle
-			depolananEnerjiCizelgesi.addData([parseInt(depolananEnerjiToplam/veriSayisi).toFixed(0)], saatDakika());
+			
+			depolananEnerjiCizelgesi.data.labels.push(saatDakika());
+			depolananEnerjiCizelgesi.data.datasets[0].data.push(parseInt(depolananEnerjiToplam/veriSayisi).toFixed(0));
+			depolananEnerjiCizelgesi.update();
+			
 			depolananEnerjiToplam = 0;
 			
 			
-			//Eklenen veri sayısı 15'i geçtiyse en baştaki veriyi sil
-			if(alinanVerilenGucCizelgesi.datasets[0].points.length > 15)
-			alinanVerilenGucCizelgesi.removeData();
+			//Eklenen veri sayısı fazlaysa en baştaki veriyi sil
+			if(alinanVerilenGucCizelgesi.data.labels.length > 120)
+			removeData(alinanVerilenGucCizelgesi);
 			
 			//Toplanan verilerin ortalamasını alıp çizelgenin sonuna ekle
-			alinanVerilenGucCizelgesi.addData([Math.abs(alinanGucToplam/veriSayisi).toFixed(0), Math.abs(verilenGucToplam/veriSayisi).toFixed(0)], saatDakika());
+			
+			alinanVerilenGucCizelgesi.data.labels.push(saatDakika());
+			alinanVerilenGucCizelgesi.data.datasets[0].data.push(Math.abs(alinanGucToplam/veriSayisi).toFixed(0));
+			alinanVerilenGucCizelgesi.data.datasets[1].data.push(Math.abs(verilenGucToplam/veriSayisi).toFixed(0));
+			alinanVerilenGucCizelgesi.update();
+			
 			alinanGucToplam = 0;
 			verilenGucToplam = 0;
 			
@@ -848,13 +902,15 @@ function cizelgeleriBoyutlandir()
 	//Ayarı yerel depolamaya kaydeder ve sayfayı yeniler
 	if(localStorage.getItem("cizelge-boyutu") == "1")
 	{
+		$("#depolanan-enerji-cizelgesi").parent().parent().parent().removeClass("col-md-12").addClass("col-md-6");
+		$("#alinan-verilen-guc-cizelgesi").parent().parent().parent().removeClass("col-md-12").addClass("col-md-6");
 		localStorage.setItem("cizelge-boyutu", "0");
-		window.location.replace('/');
 	}
 	else
 	{
+		$("#depolanan-enerji-cizelgesi").parent().parent().parent().removeClass("col-md-6").addClass("col-md-12");
+		$("#alinan-verilen-guc-cizelgesi").parent().parent().parent().removeClass("col-md-6").addClass("col-md-12");
 		localStorage.setItem("cizelge-boyutu", "1");
-		window.location.replace('/');
 	}
 }
 
@@ -932,7 +988,15 @@ function getCookie(name) {
   var parts = value.split("; " + name + "=");
   if (parts.length == 2) return parts.pop().split(";").shift();
 }
-	
+
+//Chart.js
+function removeData(chart) {
+    chart.data.labels.pop();
+    chart.data.datasets.forEach((dataset) => {
+        dataset.data.pop();
+    });
+}
+
 //Vali Admin
 (function () {
 "use strict";
