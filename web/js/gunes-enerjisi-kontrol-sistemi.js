@@ -54,8 +54,8 @@ $.ajaxSetup({
 //Yerel depolamadaki bilgiye göre çizelgelerin boyutlarını belirle
 if(localStorage.getItem("cizelge-boyutu") == "1")
 {
-	$("#depolanan-enerji-cizelgesi").parent().parent().parent().removeClass("col-md-6").addClass("col-md-12");
-	$("#alinan-verilen-guc-cizelgesi").parent().parent().parent().removeClass("col-md-6").addClass("col-md-12");
+	$("#depolanan-enerji-cizelgesi").parent().css("height", "500px").parent().parent().removeClass("col-md-6").addClass("col-md-12");
+	$("#alinan-verilen-guc-cizelgesi").parent().css("height", "500px").parent().parent().removeClass("col-md-6").addClass("col-md-12");
 }
 
 //Çizelgeleri hazırla
@@ -98,6 +98,8 @@ var alinanVerilenGucCizelgesi = new Chart(canvas, {
 						labelString: 'W'
 					}
 				}]
+			},
+			maintainAspectRatio: false
 			}
 		}
 });
@@ -133,6 +135,8 @@ var depolananEnerjiCizelgesi = new Chart(canvas2, {
 						labelString: 'WH'
 					}
 				}]
+			},
+			maintainAspectRatio: false
 			}
 		}
 });
@@ -902,14 +906,15 @@ function cizelgeleriBoyutlandir()
 	//Ayarı yerel depolamaya kaydeder ve sayfayı yeniler
 	if(localStorage.getItem("cizelge-boyutu") == "1")
 	{
-		$("#depolanan-enerji-cizelgesi").parent().parent().parent().removeClass("col-md-12").addClass("col-md-6");
-		$("#alinan-verilen-guc-cizelgesi").parent().parent().parent().removeClass("col-md-12").addClass("col-md-6");
+		$("#depolanan-enerji-cizelgesi").parent().css("height", "300px").parent().parent().removeClass("col-md-12").addClass("col-md-6");
+		$("#alinan-verilen-guc-cizelgesi").parent().css("height", "300px").parent().parent().removeClass("col-md-12").addClass("col-md-6");
+		
 		localStorage.setItem("cizelge-boyutu", "0");
 	}
 	else
 	{
-		$("#depolanan-enerji-cizelgesi").parent().parent().parent().removeClass("col-md-6").addClass("col-md-12");
-		$("#alinan-verilen-guc-cizelgesi").parent().parent().parent().removeClass("col-md-6").addClass("col-md-12");
+		$("#depolanan-enerji-cizelgesi").parent().css("height", "500px").parent().parent().removeClass("col-md-6").addClass("col-md-12");
+		$("#alinan-verilen-guc-cizelgesi").parent().css("height", "500px").parent().parent().removeClass("col-md-6").addClass("col-md-12");
 		localStorage.setItem("cizelge-boyutu", "1");
 	}
 }
