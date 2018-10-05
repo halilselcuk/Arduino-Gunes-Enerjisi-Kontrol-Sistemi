@@ -84,23 +84,20 @@ var alinanVerilenGucCizelgesi = new Chart(canvas, {
 				text: 'Alınan/Verilen Güç'
 			},
 			scales: {
-				xAxes: [{
-					display: true,
-					scaleLabel: {
-						display: true,
-						labelString: 'Zaman'
-					}
-				}],
 				yAxes: [{
 					display: true,
 					scaleLabel: {
 						display: true,
 						labelString: 'W'
+					},
+					ticks: {
+						suggestedMin: 0,
+						suggestedMax: parseInt(ayarlar.sV * ayarlar.pEYA)
 					}
 				}]
 			},
+			elements: {point: {radius: 1}},
 			maintainAspectRatio: false
-			}
 		}
 });
 var canvas2 = document.getElementById("depolanan-enerji-cizelgesi").getContext('2d');
@@ -109,7 +106,7 @@ var depolananEnerjiCizelgesi = new Chart(canvas2, {
     data: {
 			datasets: [
 			{
-				label: "Enerji",
+				label: "Gerilim",
 				backgroundColor: "rgba(0, 134, 255, 0.99)",
 				fill: true
 			}
@@ -118,27 +115,37 @@ var depolananEnerjiCizelgesi = new Chart(canvas2, {
 			responsive: true,
 			title: {
 				display: true,
-				text: 'Depolanan Enerji (Tahmini)'
+				text: 'Akü Gerilimi'
 			},
 			scales: {
-				xAxes: [{
-					display: true,
-					scaleLabel: {
-						display: true,
-						labelString: 'Zaman'
-					}
-				}],
 				yAxes: [{
 					display: true,
 					scaleLabel: {
 						display: true,
-						labelString: 'WH'
+						labelString: 'Volt'
+					},
+					ticks: {
+						suggestedMin: ayarlar.dDV,
+						suggestedMax: ayarlar.aSDV
 					}
 				}]
 			},
-			maintainAspectRatio: false
+			elements: {point: {radius: 1}},
+			maintainAspectRatio: false,
+			tooltips: {
+			 callbacks: {
+				label: function(tooltipItem, data) {					
+                    var label = tooltipItem.yLabel + "v";
+					label += ", ";
+					label += wHBul(tooltipItem.yLabel) + "wh";
+                    return label;
+				}
+			  }
+			},			
+			legend: {
+				display: false
 			}
-		}
+		},
 });
 
 function degerleriYenile(yineleme = true)
@@ -165,7 +172,7 @@ function degerleriYenile(yineleme = true)
 		var d = new Date();
 		
 		//Kaç WH enerji depolandığı bilgisini getir
-		var akuWH = wHBul();
+		var akuWH = wHBul(degerler.akuV);
 		//Akü derin deşarj sınırının altına düştüyse Depolanan Enerji bölümünün arka planını kırmızı yap
 		if(degerler.akuV < ayarlar.dDV) $("#depolanan-enerji i").css("background-color", "#B33A3A");
 		else $("#depolanan-enerji i").css("background-color", "#0086ff");
@@ -281,12 +288,12 @@ function degerleriYenile(yineleme = true)
 			//Değerleri çizelgelere ekle
 			
 			depolananEnerjiCizelgesi.data.labels.push(saatDakika());
-			depolananEnerjiCizelgesi.data.datasets[0].data.push(akuWH);
+			depolananEnerjiCizelgesi.data.datasets[0].data.push(degerler.akuV.toFixed(2));
 			depolananEnerjiCizelgesi.update();
 			
 			alinanVerilenGucCizelgesi.data.labels.push(saatDakika());
-			alinanVerilenGucCizelgesi.data.datasets[0].data.push(Math.abs(alinanW));
-			alinanVerilenGucCizelgesi.data.datasets[1].data.push(Math.abs(verilenW));
+			alinanVerilenGucCizelgesi.data.datasets[0].data.push(alinanW);
+			alinanVerilenGucCizelgesi.data.datasets[1].data.push(verilenW);
 			alinanVerilenGucCizelgesi.update();
 			
 			//Eklendiği dakikayı tut
@@ -295,7 +302,7 @@ function degerleriYenile(yineleme = true)
 		else 
 		{
 			//Değerleri ortalamasının sonraki dakika alınması için topla
-			depolananEnerjiToplam += akuWH;
+			depolananEnerjiToplam += degerler.akuV;
 			alinanGucToplam += alinanW;
 			verilenGucToplam += verilenW;
 			//Ortalama almak için toplamların bölüneceği sayıyı arttır
@@ -306,27 +313,27 @@ function degerleriYenile(yineleme = true)
 		if(dakika != d.getMinutes())
 		{
 			//Eklenen veri sayısı fazlaysa en baştaki veriyi sil
-			if(depolananEnerjiCizelgesi.data.labels.length > 120)
+			if(depolananEnerjiCizelgesi.data.labels.length > 180)
 			removeData(depolananEnerjiCizelgesi);
 			
 			//Toplanan verilerin ortalamasını alıp çizelgenin sonuna ekle
 			
 			depolananEnerjiCizelgesi.data.labels.push(saatDakika());
-			depolananEnerjiCizelgesi.data.datasets[0].data.push(parseInt(depolananEnerjiToplam/veriSayisi).toFixed(0));
+			depolananEnerjiCizelgesi.data.datasets[0].data.push((depolananEnerjiToplam/veriSayisi).toFixed(2));
 			depolananEnerjiCizelgesi.update();
 			
 			depolananEnerjiToplam = 0;
 			
 			
 			//Eklenen veri sayısı fazlaysa en baştaki veriyi sil
-			if(alinanVerilenGucCizelgesi.data.labels.length > 120)
+			if(alinanVerilenGucCizelgesi.data.labels.length > 180)
 			removeData(alinanVerilenGucCizelgesi);
 			
 			//Toplanan verilerin ortalamasını alıp çizelgenin sonuna ekle
 			
 			alinanVerilenGucCizelgesi.data.labels.push(saatDakika());
-			alinanVerilenGucCizelgesi.data.datasets[0].data.push(Math.abs(alinanGucToplam/veriSayisi).toFixed(0));
-			alinanVerilenGucCizelgesi.data.datasets[1].data.push(Math.abs(verilenGucToplam/veriSayisi).toFixed(0));
+			alinanVerilenGucCizelgesi.data.datasets[0].data.push(parseInt(alinanGucToplam/veriSayisi));
+			alinanVerilenGucCizelgesi.data.datasets[1].data.push(parseInt(verilenGucToplam/veriSayisi));
 			alinanVerilenGucCizelgesi.update();
 			
 			alinanGucToplam = 0;
@@ -767,7 +774,7 @@ function wHKalibrasyonuBitir()
 	wHGetir();
 }
 
-function wHBul()
+function wHBul(akuV)
 {
 	var geciciDegerler = [0];
 
@@ -775,7 +782,7 @@ function wHBul()
 	for (dg in wHDizisi) 
 	{
 		 dg = parseFloat(dg);
-		 var fark = Math.abs(degerler.akuV - dg);
+		 var fark = Math.abs(akuV - dg);
 		 if(fark < geciciDegerler[0] || geciciDegerler[0] == 0)
 		{
 			 geciciDegerler[0] = fark;
@@ -996,9 +1003,9 @@ function getCookie(name) {
 
 //Chart.js
 function removeData(chart) {
-    chart.data.labels.pop();
+    chart.data.labels.shift();
     chart.data.datasets.forEach((dataset) => {
-        dataset.data.pop();
+        dataset.data.shift();
     });
 }
 
