@@ -1,0 +1,1 @@
+[{"ad":"Salon","id":36,"simge":"far fa-lightbulb"},{"ad":"Oda","id":37,"simge":"far fa-lightbulb"},{"ad":"Lavabo","id":"lavabo","simge":"far fa-lightbulb"},{"ad":"Bahçe","id":"bahce","simge":"far fa-lightbulb"},{"ad":"Inverter","id":35,"simge":"fas fa-plug"},{"ad":"Soğutma","id":"sogutma","simge":"far fa-snowflake"},{"ad":"Reset","id":"reset","simge":"fas fa-redo"}]

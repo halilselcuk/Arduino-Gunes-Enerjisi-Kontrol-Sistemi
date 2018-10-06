@@ -93,13 +93,9 @@ struct Config {
 	int panelGerilimPini;
 	int panelAkimPini;
 	int akuAkimPini;
-	int role1;
 	int fanR;
 	int bahceR;
 	int lavaboR;
-	int inverterR;
-	int salonR;
-	int odaR;
 	int panelR;
 	String corsSiteleri;
 	String yonetici;
@@ -111,6 +107,8 @@ struct Config {
 const char *configFile = "cfg.txt";	// <- SD library uses 8.3 filenames
 const char *configFileBackup = "cfg-b.txt";
 Config cfg;						 	// <- global configuration object
+
+bool pinler[54];
 
 void setup()
 {
@@ -143,22 +141,16 @@ void setup()
 	//Arduino'nun başlatıldığını loglar
 	logla("Baslatildi");
 
-	digitalWrite(cfg.role1, HIGH);
 	digitalWrite(cfg.fanR, HIGH);
 	digitalWrite(cfg.bahceR, HIGH);
 	digitalWrite(cfg.lavaboR, HIGH);
-	digitalWrite(cfg.inverterR, HIGH);
-	digitalWrite(cfg.salonR, HIGH);
-	digitalWrite(cfg.odaR, HIGH);
 	digitalWrite(cfg.panelR, HIGH);
-	pinMode(cfg.role1, OUTPUT);
+	
 	pinMode(cfg.fanR, OUTPUT);
 	pinMode(cfg.bahceR, OUTPUT);
 	pinMode(cfg.lavaboR, OUTPUT);
-	pinMode(cfg.inverterR, OUTPUT);
-	pinMode(cfg.salonR, OUTPUT);
-	pinMode(cfg.odaR, OUTPUT);
 	pinMode(cfg.panelR, OUTPUT);
+	
 	pinMode(cfg.akuGerilimPini, INPUT);
 	pinMode(cfg.panelGerilimPini, INPUT);
 	pinMode(cfg.panelAkimPini, INPUT);
@@ -168,7 +160,9 @@ void setup()
 	
 	akuAkimSensorunuSifirla();
 	panelAkimSensorunuSifirla();
-
+	
+	pinleriTanimla();
+	
 	//Kalıcı kapalı
 	if(cfg.fanAyari == 0) fanDurumu = 0;
 	//Kalıcı açık
@@ -602,7 +596,7 @@ void loop()
 					
 					if(yol == "surum")
 					{
-						client.println("1.4");
+						client.println("1.5");
 					}
 					
 					else if(yol == "degerler")
@@ -628,15 +622,18 @@ void loop()
 							if(lavaboAydinlatmaDurumu > 2)
 							degerler["lavaboAydinlatmaSayaci"] = String(cfg.geciciAydinlatmaSiniri)+"/"+String(lavaboAydinlatmaSayaci);
 
-							degerler["role1"] = digitalRead(cfg.role1);
 							degerler["fanR"] = digitalRead(cfg.fanR);
 							degerler["bahceR"] = digitalRead(cfg.bahceR);
 							degerler["lavaboR"] = digitalRead(cfg.lavaboR);
-							degerler["inverterR"] = digitalRead(cfg.inverterR);
-							degerler["salonR"] = digitalRead(cfg.salonR);
-							degerler["odaR"] = digitalRead(cfg.odaR);
 							degerler["panelR"] = digitalRead(cfg.panelR);
 							
+							for(int i = 0; i < sizeof(pinler); i++)
+							{
+								if(pinler[i] == true)
+								{
+									degerler["p"+String(i)] = digitalRead(i);
+								}
+							}
 							
 							//degerler["free_memory"] = "8192/" + String(freeMemory());
 							
@@ -735,35 +732,18 @@ void loop()
 								logla("Yonetici adi degistirildi");
 							}
 						}
-						
-						else if(yol == "inverter")
+					
+						else if(yol == "digital_write")
 						{
-							if(post("durum") == "1")
+							int pin = post("pin").toInt();
+							int durum = post("durum").toInt();
+							if(pin != -1 && durum != -1)
 							{
-								digitalWrite(cfg.inverterR, LOW);
+								digitalWrite(pin, durum);
+								
+								client.print("1");
 							}
-							else digitalWrite(cfg.inverterR, HIGH);
-							client.print("1");
-						}
-						
-						else if(yol == "salon_aydinlatmasi")
-						{
-							if(post("durum") == "1")
-							{
-								digitalWrite(cfg.salonR, LOW);
-							}
-							else digitalWrite(cfg.salonR, HIGH);
-							client.print("1");
-						}
-						
-						else if(yol == "oda_aydinlatmasi")
-						{
-							if(post("durum") == "1")
-							{
-								digitalWrite(cfg.odaR, LOW);
-							}
-							else digitalWrite(cfg.odaR, HIGH);
-							client.print("1");
+							else client.print("0");
 						}
 						
 						else if(yol == "led")
@@ -955,6 +935,11 @@ void loop()
 							client.print("1");
 						}
 						
+						else if(yol == "pinleri_yeniden_tanimla")
+						{
+							client.print(pinleriTanimla());
+						}
+						
 						else if(yol == "ayar")
 						{
 							String ad = post("ad");
@@ -1077,10 +1062,6 @@ void loop()
 								{
 									cfg.akuAkimPini = deger.toInt();
 								}
-								else if(ad == "role1")
-								{
-									cfg.role1 = deger.toInt();
-								}
 								else if(ad == "fanR")
 								{
 									cfg.fanR = deger.toInt();
@@ -1092,18 +1073,6 @@ void loop()
 								else if(ad == "lavaboR")
 								{
 									cfg.lavaboR = deger.toInt();
-								}
-								else if(ad == "inverterR")
-								{
-									cfg.inverterR = deger.toInt();
-								}
-								else if(ad == "salonR")
-								{
-									cfg.salonR = deger.toInt();
-								}
-								else if(ad == "odaR")
-								{
-									cfg.odaR = deger.toInt();
 								}
 								else if(ad == "panelR")
 								{
@@ -1336,13 +1305,16 @@ void printHeader()
 void gucCikisiniDurdur()
 {
 	//Güç çıkış rölelerini kapatır
-	digitalWrite(cfg.role1, HIGH);
 	digitalWrite(cfg.fanR, HIGH);
 	digitalWrite(cfg.bahceR, HIGH);
 	digitalWrite(cfg.lavaboR, HIGH);
-	digitalWrite(cfg.inverterR, HIGH);
-	digitalWrite(cfg.salonR, HIGH);
-	digitalWrite(cfg.odaR, HIGH);
+	for(int i = 0; i < sizeof(pinler); i++)
+	{
+		if(pinler[i] == true)
+		{
+			digitalWrite(i, HIGH);
+		}
+	}
 }
 
 bool gucCikisi()
@@ -1351,9 +1323,13 @@ bool gucCikisi()
 	if(digitalRead(cfg.fanR) == LOW) return true;
 	if(digitalRead(cfg.bahceR) == LOW) return true;
 	if(digitalRead(cfg.lavaboR) == LOW) return true;
-	if(digitalRead(cfg.inverterR) == LOW) return true;
-	if(digitalRead(cfg.salonR) == LOW) return true;
-	if(digitalRead(cfg.odaR) == LOW) return true;
+	for(int i = 0; i < sizeof(pinler); i++)
+	{
+		if(pinler[i] == true)
+		{
+			if(digitalRead(i) == LOW) return true;
+		}
+	}
 	return false;
 }
 
@@ -1385,6 +1361,39 @@ void panelAkimSensorunuSifirla()
 		delay(1);
 	}
 	panelAkimSensoruSifir = int(toplam / 100);
+}
+
+int pinleriTanimla()
+{
+	//Dizinin bütün elemanlarını false yapar
+	memset(pinler, 0, sizeof(pinler));
+	
+	File file = SD.open("pinler.txt");
+	if(file)
+	{
+		String tmpS;
+		char tmpC;
+		while(file.available()) 
+		{
+			tmpC = (char)file.read();
+			if(tmpC == ',') 
+			{
+				int i = tmpS.toInt();
+				if(i < sizeof(pinler) && i > -1)
+				{
+					digitalWrite(i, HIGH);
+					pinMode(i, OUTPUT);
+					delay(10);
+					pinler[i] = true;
+				}
+				tmpS = "";
+			}
+			else tmpS += tmpC; //
+		}
+		file.close();
+		return 1;
+	}
+	else return 0;
 }
 
 // Loads the configuration from a file
@@ -1468,13 +1477,9 @@ void loadConfiguration() {
 	cfg.akuAkimPini = root["aAP"] | A11;
 	
 	//Röle pinleri
-	cfg.role1 = root["role1"] | 31;
 	cfg.fanR = root["fanR"] | 32;
 	cfg.bahceR = root["bahceR"] | 33;
 	cfg.lavaboR = root["lavaboR"] | 34;
-	cfg.inverterR = root["inverterR"] | 35;
-	cfg.salonR = root["salonR"] | 36;
-	cfg.odaR = root["odaR"] | 37;
 	cfg.panelR = root["panelR"] | 38;
 	
 	//Giriş bilgileri
@@ -1549,13 +1554,9 @@ int updateConfig(String cfgF) {
 	root["pGP"] = cfg.panelGerilimPini;
 	root["pAP"] = cfg.panelAkimPini;
 	root["aAP"] = cfg.akuAkimPini;
-	root["role1"] = cfg.role1;
 	root["fanR"] = cfg.fanR;
 	root["bahceR"] = cfg.bahceR;
 	root["lavaboR"] = cfg.lavaboR;
-	root["inverterR"] = cfg.inverterR;
-	root["salonR"] = cfg.salonR;
-	root["odaR"] = cfg.odaR;
 	root["panelR"] = cfg.panelR;
 	root["yonetici"] = cfg.yonetici;
 	root["key"] = cfg.key;

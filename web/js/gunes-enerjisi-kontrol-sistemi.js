@@ -10,6 +10,8 @@ var dakika = null;
 var veriSayisi = 0;
 var wHDizisi;
 var ayarlar;
+var butonlar;
+var pinler = [];
 
 //Ayarları getir
 $.ajax({
@@ -37,6 +39,23 @@ else
 		wHGetir();
 	}
 }
+
+//Butonlar yerel depolamada varsa onları kullan yoksa Arduino'dan getir
+if(localStorage.getItem("butonlar") == null) butonlariGetir();
+else
+{
+	try
+	{
+		butonlar = JSON.parse(localStorage.getItem("butonlar"));
+	}
+	catch(e)
+	{
+		butonlariGetir();
+	}
+}
+
+//Butonları arayüze ekle
+butonlariEkle();
 
 //Kullanıcı yöneticiyse yönetici araçlarını göster
 if(getCookie("yonetici") == "1") $(".yonetici-araci").css("display", "");
@@ -214,13 +233,7 @@ function degerleriYenile(yineleme = true)
 			$("#alinan-guc .progress-bar").css("width", yuzde+"%").attr("aria-valuenow", yuzde);
 			$("#alinan-guc b").html(alinanW);
 		}
-		
-		//Güç çıkışı varsa arkaplan rengini kırmızı yoksa siyah yap
-		if(degerler.fanR == 0 || degerler.bahceR == 0 || degerler.lavaboR == 0 || degerler.inverterR == 0 ||
-		degerler.salonR == 0 || degerler.odaR == 0)
-		$("#verilen-guc i").css("background-color", "#dc3545");
-		else $("#verilen-guc i").css("background-color", "#212529");
-		
+				
 		//Aşırı akım sınırına ne kadar yaklaşıldığının hesabı
 		//%100 = aküden çekilebilecek akım
 		var yuzde = (degerler.akuA * 100) / ayarlar.aAS;
@@ -272,15 +285,13 @@ function degerleriYenile(yineleme = true)
 		if(degerler.fanR == 1) $("#sogutma-btn").children("em").css("color", "#fff");
 		else $("#sogutma-btn").children("em").css("color", "#ffc107");
 		
-		//Butonları rölelerin durumuna göre renklendir
-		if(degerler.inverterR == 1) $("#inverter-btn").addClass("btn-secondary");
-		else $("#inverter-btn").addClass("btn-danger");
-		
-		if(degerler.salonR == 1) $("#salon-btn").addClass("btn-secondary");
-		else $("#salon-btn").addClass("btn-danger");
-		
-		if(degerler.odaR == 1) $("#oda-btn").addClass("btn-secondary");
-		else $("#oda-btn").addClass("btn-danger");
+		//Butonları pinlerin durumuna göre renklendir
+		for (key in pinler) 
+		{
+			var pin = pinler[key];
+			if(degerler["p"+pin] == 1) $("#"+pin+"-btn").addClass("btn-secondary");
+			else $("#"+pin+"-btn").addClass("btn-danger");
+		}
 		
 		//Fonksiyonun ilk çalışmasıysa
 		if(dakika == null) 
@@ -472,31 +483,41 @@ click: function() {
 }
 });
 
-function oda()
-{
-	//Röle durumunun tersini yap
-	if(degerler.odaR == 1) komut("oda_aydinlatmasi", 1);
-	else komut("oda_aydinlatmasi", 0);
-}
-
-function salon()
-{
-	//Röle durumunun tersini yap
-	if(degerler.salonR == 1) komut("salon_aydinlatmasi", 1);
-	else komut("salon_aydinlatmasi", 0);
-}
-
-function inverter()
-{
-	//Röle durumunun tersini yap
-	if(degerler.inverterR == 1) komut("inverter", 1);
-	else komut("inverter", 0);
-}
-
-function reset()
-{
+$("#reset-btn").on({
+click: function() {
 	komut("reset", 5);
 	toastr.info('Reset komutu gönderildi.');
+}
+});
+
+function buton(pin)
+{
+	//Pin durumunun tersini yap
+	if(degerler["p"+pin] == 1) digitalWrite(pin, 0);
+	else digitalWrite(pin, 1);
+}
+
+function digitalWrite(pin, durum)
+{
+	$.ajax({
+		type: 'POST',
+		url: "digital_write",
+		data: "key="+getCookie("key")+"&pin="+pin+"&durum="+durum,
+		success: function(r){
+			if(r != "1") 
+			{
+				toastr.error('Komut gönderilemedi.');
+				return;
+			}
+			/*if(durum == 0) toastr.info('Açma komutu gönderildi.');
+			if(durum == 1) toastr.info('Kapatma komutu gönderildi.');*/
+			//Komut gönderildikten sonra arayüzdeki verileri güncelle
+			degerleriYenile(false);
+		},
+		error: function(){
+		toastr.error('Komut gönderilemedi.');
+		}
+	});
 }
 
 function komut(ad, durum)
@@ -511,11 +532,11 @@ function komut(ad, durum)
 				toastr.error('Komut gönderilemedi.');
 				return;
 			}
-			if(durum == 0) toastr.info('Kapatma komutu gönderildi.');
+			/*if(durum == 0) toastr.info('Kapatma komutu gönderildi.');
 			if(durum == 1) toastr.info('Açma komutu gönderildi.');
 			if(durum == 2) toastr.info('Otomatik ayar komutu gönderildi.');
 			if(durum == 3) toastr.info('Geçici açma komutu gönderildi.');
-			if(durum == 4) toastr.info('Geçici kapatma komutu gönderildi.');
+			if(durum == 4) toastr.info('Geçici kapatma komutu gönderildi.');*/
 			//Komut gönderildikten sonra arayüzdeki verileri güncelle
 			degerleriYenile(false);
 		},
@@ -936,7 +957,7 @@ function dosyaYukle()
 	  data: metin,
 	  success: function(r){
 		if(r.substring(0,6) == "dosya_") toastr.error('Dosya açılamadı. Dosya adını değiştirmeyi deneyin.');
-		else toastr.success('Gönderilen/kaydedilen: ' + metin.length +"/"+ r, 'Yükleme tamamlandı.', {extendedTimeOut: 0, timeOut: 0, closeButton : true});
+		else toastr.success('Gönderilen/kaydedilen: ' + metin.length +"/"+ r, $("#dosya-adi").val() + ' Yüklendi', {extendedTimeOut: 0, timeOut: 0, closeButton: true});
 	  },
 	  error: function(){
 		toastr.error('Yükleme başarısız.');
@@ -944,6 +965,136 @@ function dosyaYukle()
 	  timeout: 300000,
 	  async: false
 	});
+}
+
+function butonlariGetir()
+{
+	//Arduino'dan WH bilgilerini getirir.
+	$.ajax({
+		type: 'GET',
+		url: "butonlar.txt",
+		success: function(r){
+			try
+			{
+				butonlar = JSON.parse(r);
+			}
+			catch(e)
+			{
+				toastr.error('Butonların dizisi ayrıştırılamadı.');
+				return;
+			}
+			localStorage.setItem("butonlar", r);
+		},
+		error: function(){
+			toastr.error('Butonların dizisi getirilemedi.');
+		},
+		async: false
+	});
+}
+
+function butonlariEkle()
+{
+	$("#islemler").html("");
+	for(key in butonlar) 
+	{
+		var btn = butonlar[key];
+		//Onclick
+		var oC = '';
+		//Eğer btn.id tam sayıysa bu bir pin tetikleyen butondur
+		if(Number.isInteger(btn.id)) 
+		{
+			pinler.push(btn.id);
+			oC = 'onclick="buton('+btn.id+')";';
+		}
+		var html = `
+					<div class="col-lg-3 col-md-4 col-sm-6">
+						<button id="`+btn.id+`-btn" `+oC+` type="button" class="btn btn-circle btn-lg islem">
+							<em class="`+btn.simge+`"></em>
+						</button>
+						<p>`+btn.ad+`</p>
+					</div>`;
+		$("#islemler").append(html);
+	}
+}
+
+function butonlariDuzenle()
+{
+	$("#islemler").html("");
+	for (key in butonlar) 
+	{
+		var btn = butonlar[key];
+		var html = `
+					<div class="col-lg-3 col-md-4 col-sm-6 border duzenlenen-buton" style="margin-bottom: 15px;">
+						<div class="form-group">
+						  <label>Ad:</label>
+						  <input type="text" class="form-control" id="btn-ad" value="`+btn.ad+`">
+						</div>
+						<div class="form-group">
+						  <label>ID ya da pin:</label>
+						  <input type="text" class="form-control" id="btn-id" value="`+btn.id+`">
+						</div>
+						<div class="form-group">
+						  <label>Simge:</label>
+						  <input type="text" class="form-control" id="btn-simge" value="`+btn.simge+`">
+						</div>
+					</div>`;
+		$("#islemler").append(html);
+	}
+
+	$("#islemler").append(`
+					<div class="col-lg-3 col-md-4 col-sm-6 border duzenlenen-buton" style="margin-bottom: 15px;">
+						<div class="form-group">
+						  <label>Ad:</label>
+						  <input type="text" class="form-control" id="btn-ad" placeholder="Yeni butonun adı">
+						</div>
+						<div class="form-group">
+						  <label>ID ya da pin:</label>
+						  <input type="text" class="form-control" id="btn-id" placeholder="Yeni Buton ID'si ya da pin'i">
+						</div>
+						<div class="form-group">
+						  <label>Simge:</label>
+						  <input type="text" class="form-control" id="btn-simge" placeholder="Yeni butonun simgesi">
+						</div>
+					</div>
+					<button type="button" class="btn btn-warning col-sm-12" onclick="butonlariKaydet()"><i class="fas fa-save"></i></button>
+					`);
+}
+
+function butonlariKaydet()
+{
+	butonlar = [];
+	pinler = [];
+	
+	$(".duzenlenen-buton").each(function(index, element) {
+		var btn = {};		
+		btn.ad = $(element).find("#btn-ad").val();
+		btn.id = $(element).find("#btn-id").val();
+		btn.simge = $(element).find("#btn-simge").val();
+		if(btn.id == "") return true;
+		
+		if(!isNaN(btn.id))
+		{
+			btn.id = parseInt(btn.id);
+			pinler.push(btn.id);
+		}
+		
+		butonlar.push(btn);
+		
+	});
+	
+	$("#dosya-adi").val("pinler.txt");
+	$("#metin").val(pinler.join()+",");
+	dosyaYukle();
+	
+	$("#dosya-adi").val("butonlar.txt");
+	$("#metin").val(JSON.stringify(butonlar));
+	dosyaYukle();
+	localStorage.setItem("butonlar", JSON.stringify(butonlar));
+	
+	komut("pinleri_yeniden_tanimla", 5);
+	toastr.info('Diğer cihazlarda yerel depolamayı temizleyin.', 'Butonlar güncellendi.', {extendedTimeOut: 0, timeOut: 0, closeButton: true});
+	
+	butonlariEkle();
 }
 
 function turkceKarakterleriDonustur()

@@ -1,4 +1,4 @@
-<!-- Navbar-->
+﻿<!-- Navbar-->
 <header class="app-header"><a class="app-header__logo" href="#" id="btn_anasayfa"><em class="fa fa-solar-panel" id="logo"></em> </a>
   <!-- Sidebar toggle button--><a class="app-sidebar__toggle" href="#" data-toggle="sidebar" aria-label="Hide Sidebar"></a>
   <!-- Navbar Right Menu-->
@@ -45,7 +45,7 @@
 	  </div>
 	</div>
 	<div class="col-md-6 col-lg-4" id="verilen-guc">
-	  <div class="widget-small danger coloured-icon"><i class="icon fa fa-bolt  fa-3x" style="background-color: #212529;"></i>
+	  <div class="widget-small danger coloured-icon"><i class="icon fa fa-bolt  fa-3x" style="background-color: #dc3545;"></i>
 		<div class="info">
 		  <h5>Verilen Güç</h5>
 		  <p><b>0</b> W</p>
@@ -63,30 +63,10 @@
 		<h3 class="tile-title">İşlemler</h3>
 		<div class="container">
 			<center>
-				<div class="row">
-					<div class="col-lg-3 col-md-4 col-sm-6">
-					<button id="bahce-btn" title="Aydınlatmayı ayarlar." type="button" class="btn btn-circle btn-lg islem"><em class="far fa-lightbulb"></em></button>
-					<p>Bahçe</p></div>
-					<div class="col-lg-3 col-md-4 col-sm-6">
-					<button id="lavabo-btn" title="Aydınlatmayı ayarlar." type="button" class="btn btn-circle btn-lg islem"><em class="far fa-lightbulb"></em></button>
-					<p>Lavabo</p></div>
-					<div class="col-lg-3 col-md-4 col-sm-6">
-					<button onclick="oda();" id="oda-btn" title="Aydınlatmayı ayarlar." type="button" class="btn btn-circle btn-lg islem"><em class="far fa-lightbulb"></em></button>
-					<p>Oda</p></div>
-					<div class="col-lg-3 col-md-4 col-sm-6">
-					<button onclick="salon();" id="salon-btn" title="Aydınlatmayı ayarlar." type="button" class="btn btn-circle btn-lg islem"><em class="far fa-lightbulb"></em></button>
-					<p>Salon</p></div>
-					<div class="col-lg-3 col-md-4 col-sm-6">
-					<button onclick="inverter();" id="inverter-btn" title="Inverter'ı ayarlar." type="button" class="btn btn-circle btn-lg islem"><em class="fas fa-plug"></em></button>
-					<p>Inverter</p></div>
-					<div class="col-lg-3 col-md-4 col-sm-6">
-					<button id="sogutma-btn" title="Soğutmayı ayarlar." type="button" class="btn btn-circle btn-lg islem"><em class="far fa-snowflake"></em></button>
-					<p>Soğutma</p></div>
-					<div class="col-lg-3 col-md-4 col-sm-6">
-					<button onclick="reset();" title="Arduino'yu yeniden başlatır." type="button" class="btn btn-circle btn-lg islem"><em class="fas fa-redo"></em></button>
-					<p>Reset</p></div>
+				<div class="row" id="islemler">
 				</div>
 			</center>
+			<i class="fas fa-edit" style="position: absolute; right: 5px; cursor: pointer;" onclick="butonlariDuzenle()"></i>
 		</div>
 	  </div>
 	</div>
@@ -336,13 +316,6 @@
 	<button type="button" class="btn btn-warning col-sm-1" onclick="ayarKaydetBtn(this);"><i class="fas fa-save"></i></button> 
 </div>
 <div class="form-group row">
-  <label class="control-label col-sm-3" id="cfg_role1">role1</label>
-	  <div class="col-sm-3">          
-		<input type="text" class="form-control">	
-	  </div>
-	<button type="button" class="btn btn-warning col-sm-1" onclick="ayarKaydetBtn(this);"><i class="fas fa-save"></i></button> 
-</div>
-<div class="form-group row">
   <label class="control-label col-sm-3" id="cfg_fanR">fanR</label>
 	  <div class="col-sm-3">          
 		<input type="text" class="form-control">	
@@ -358,27 +331,6 @@
 </div>
 <div class="form-group row">
   <label class="control-label col-sm-3" id="cfg_lavaboR">lavaboR</label>
-	  <div class="col-sm-3">          
-		<input type="text" class="form-control">	
-	  </div>
-	<button type="button" class="btn btn-warning col-sm-1" onclick="ayarKaydetBtn(this);"><i class="fas fa-save"></i></button> 
-</div>
-<div class="form-group row">
-  <label class="control-label col-sm-3" id="cfg_inverterR">inverterR</label>
-	  <div class="col-sm-3">          
-		<input type="text" class="form-control">	
-	  </div>
-	<button type="button" class="btn btn-warning col-sm-1" onclick="ayarKaydetBtn(this);"><i class="fas fa-save"></i></button> 
-</div>
-<div class="form-group row">
-  <label class="control-label col-sm-3" id="cfg_salonR">salonR</label>
-	  <div class="col-sm-3">          
-		<input type="text" class="form-control">	
-	  </div>
-	<button type="button" class="btn btn-warning col-sm-1" onclick="ayarKaydetBtn(this);"><i class="fas fa-save"></i></button> 
-</div>
-<div class="form-group row">
-  <label class="control-label col-sm-3" id="cfg_odaR">odaR</label>
 	  <div class="col-sm-3">          
 		<input type="text" class="form-control">	
 	  </div>
