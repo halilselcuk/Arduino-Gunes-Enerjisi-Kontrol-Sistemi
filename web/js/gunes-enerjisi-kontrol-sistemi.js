@@ -969,7 +969,7 @@ function dosyaYukle()
 
 function butonlariGetir()
 {
-	//Arduino'dan WH bilgilerini getirir.
+	//Arduino'dan butonları getirir.
 	$.ajax({
 		type: 'GET',
 		url: "butonlar.txt",
@@ -1019,6 +1019,8 @@ function butonlariEkle()
 
 function butonlariDuzenle()
 {
+	//Sayfanın kapatılmasını önle
+	window.onbeforeunload = function() {return "Sayfayı kapatmak istediğinizden emin misiniz?";};
 	$("#islemler").html("");
 	for (key in butonlar) 
 	{
@@ -1095,6 +1097,8 @@ function butonlariKaydet()
 	toastr.info('Diğer cihazlarda yerel depolamayı temizleyin.', 'Butonlar güncellendi.', {extendedTimeOut: 0, timeOut: 0, closeButton: true});
 	
 	butonlariEkle();
+	//Uyarıyı kaldır
+	window.onbeforeunload = "";
 }
 
 function turkceKarakterleriDonustur()
