@@ -38,8 +38,6 @@
   --breakpoint-md: 768px;
   --breakpoint-lg: 992px;
   --breakpoint-xl: 1200px;
-  --font-family-sans-serif: "Lato", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  --font-family-monospace: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 }
 
 *,
@@ -68,7 +66,6 @@ article, aside, figcaption, figure, footer, header, hgroup, main, nav, section {
 
 body {
   margin: 0;
-  font-family: "Lato", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   font-size: 0.875rem;
   font-weight: 400;
   line-height: 1.5;
@@ -128,7 +125,7 @@ ul ol {
 }
 
 dt {
-  font-weight: 700;
+  font-weight: 500;
 }
 
 dd {
@@ -199,7 +196,6 @@ pre,
 code,
 kbd,
 samp {
-  font-family: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
   font-size: 1em;
 }
 
@@ -372,7 +368,7 @@ h1, h2, h3, h4, h5, h6,
 .h1, .h2, .h3, .h4, .h5, .h6 {
   margin-bottom: 0.5rem;
   font-family: inherit;
-  font-weight: bold;
+  font-weight: 600;
   line-height: 1.2;
   color: inherit;
 }
@@ -536,7 +532,7 @@ kbd {
 kbd kbd {
   padding: 0;
   font-size: 100%;
-  font-weight: 700;
+  font-weight: 500;
 }
 
 pre {
@@ -2497,7 +2493,7 @@ select.form-control-lg:not([size]):not([multiple]), .input-group-lg > select.for
 
 .btn {
   display: inline-block;
-  font-weight: 700;
+  font-weight: 500;
   text-align: center;
   white-space: nowrap;
   vertical-align: middle;
@@ -2552,221 +2548,6 @@ fieldset:disabled a.btn {
   pointer-events: none;
 }
 
-.btn-primary {
-  color: #FFF;
-  background-color: #009688;
-  border-color: #009688;
-}
-
-.btn-primary:hover {
-  color: #FFF;
-  background-color: #007065;
-  border-color: #00635a;
-}
-
-.btn-primary:focus, .btn-primary.focus {
-  -webkit-box-shadow: 0 0 0 0 rgba(0, 150, 136, 0.5);
-          box-shadow: 0 0 0 0 rgba(0, 150, 136, 0.5);
-}
-
-.btn-primary.disabled, .btn-primary:disabled {
-  color: #FFF;
-  background-color: #009688;
-  border-color: #009688;
-}
-
-.btn-primary:not(:disabled):not(.disabled):active, .btn-primary:not(:disabled):not(.disabled).active,
-.show > .btn-primary.dropdown-toggle {
-  color: #FFF;
-  background-color: #00635a;
-  border-color: #00564e;
-}
-
-.btn-primary:not(:disabled):not(.disabled):active:focus, .btn-primary:not(:disabled):not(.disabled).active:focus,
-.show > .btn-primary.dropdown-toggle:focus {
-  -webkit-box-shadow: 0 0 0 0 rgba(0, 150, 136, 0.5);
-          box-shadow: 0 0 0 0 rgba(0, 150, 136, 0.5);
-}
-
-.btn-secondary {
-  color: #FFF;
-  background-color: #6c757d;
-  border-color: #6c757d;
-}
-
-.btn-secondary:hover {
-  color: #FFF;
-  background-color: #5a6268;
-  border-color: #545b62;
-}
-
-.btn-secondary:focus, .btn-secondary.focus {
-  -webkit-box-shadow: 0 0 0 0 rgba(108, 117, 125, 0.5);
-          box-shadow: 0 0 0 0 rgba(108, 117, 125, 0.5);
-}
-
-.btn-secondary.disabled, .btn-secondary:disabled {
-  color: #FFF;
-  background-color: #6c757d;
-  border-color: #6c757d;
-}
-
-.btn-secondary:not(:disabled):not(.disabled):active, .btn-secondary:not(:disabled):not(.disabled).active,
-.show > .btn-secondary.dropdown-toggle {
-  color: #FFF;
-  background-color: #545b62;
-  border-color: #4e555b;
-}
-
-.btn-secondary:not(:disabled):not(.disabled):active:focus, .btn-secondary:not(:disabled):not(.disabled).active:focus,
-.show > .btn-secondary.dropdown-toggle:focus {
-  -webkit-box-shadow: 0 0 0 0 rgba(108, 117, 125, 0.5);
-          box-shadow: 0 0 0 0 rgba(108, 117, 125, 0.5);
-}
-
-.btn-success {
-  color: #FFF;
-  background-color: #28a745;
-  border-color: #28a745;
-}
-
-.btn-success:hover {
-  color: #FFF;
-  background-color: #218838;
-  border-color: #1e7e34;
-}
-
-.btn-success:focus, .btn-success.focus {
-  -webkit-box-shadow: 0 0 0 0 rgba(40, 167, 69, 0.5);
-          box-shadow: 0 0 0 0 rgba(40, 167, 69, 0.5);
-}
-
-.btn-success.disabled, .btn-success:disabled {
-  color: #FFF;
-  background-color: #28a745;
-  border-color: #28a745;
-}
-
-.btn-success:not(:disabled):not(.disabled):active, .btn-success:not(:disabled):not(.disabled).active,
-.show > .btn-success.dropdown-toggle {
-  color: #FFF;
-  background-color: #1e7e34;
-  border-color: #1c7430;
-}
-
-.btn-success:not(:disabled):not(.disabled):active:focus, .btn-success:not(:disabled):not(.disabled).active:focus,
-.show > .btn-success.dropdown-toggle:focus {
-  -webkit-box-shadow: 0 0 0 0 rgba(40, 167, 69, 0.5);
-          box-shadow: 0 0 0 0 rgba(40, 167, 69, 0.5);
-}
-
-.btn-info {
-  color: #FFF;
-  background-color: #17a2b8;
-  border-color: #17a2b8;
-}
-
-.btn-info:hover {
-  color: #FFF;
-  background-color: #138496;
-  border-color: #117a8b;
-}
-
-.btn-info:focus, .btn-info.focus {
-  -webkit-box-shadow: 0 0 0 0 rgba(23, 162, 184, 0.5);
-          box-shadow: 0 0 0 0 rgba(23, 162, 184, 0.5);
-}
-
-.btn-info.disabled, .btn-info:disabled {
-  color: #FFF;
-  background-color: #17a2b8;
-  border-color: #17a2b8;
-}
-
-.btn-info:not(:disabled):not(.disabled):active, .btn-info:not(:disabled):not(.disabled).active,
-.show > .btn-info.dropdown-toggle {
-  color: #FFF;
-  background-color: #117a8b;
-  border-color: #10707f;
-}
-
-.btn-info:not(:disabled):not(.disabled):active:focus, .btn-info:not(:disabled):not(.disabled).active:focus,
-.show > .btn-info.dropdown-toggle:focus {
-  -webkit-box-shadow: 0 0 0 0 rgba(23, 162, 184, 0.5);
-          box-shadow: 0 0 0 0 rgba(23, 162, 184, 0.5);
-}
-
-.btn-warning {
-  color: #212529;
-  background-color: #ffc107;
-  border-color: #ffc107;
-}
-
-.btn-warning:hover {
-  color: #212529;
-  background-color: #e0a800;
-  border-color: #d39e00;
-}
-
-.btn-warning:focus, .btn-warning.focus {
-  -webkit-box-shadow: 0 0 0 0 rgba(255, 193, 7, 0.5);
-          box-shadow: 0 0 0 0 rgba(255, 193, 7, 0.5);
-}
-
-.btn-warning.disabled, .btn-warning:disabled {
-  color: #212529;
-  background-color: #ffc107;
-  border-color: #ffc107;
-}
-
-.btn-warning:not(:disabled):not(.disabled):active, .btn-warning:not(:disabled):not(.disabled).active,
-.show > .btn-warning.dropdown-toggle {
-  color: #212529;
-  background-color: #d39e00;
-  border-color: #c69500;
-}
-
-.btn-warning:not(:disabled):not(.disabled):active:focus, .btn-warning:not(:disabled):not(.disabled).active:focus,
-.show > .btn-warning.dropdown-toggle:focus {
-  -webkit-box-shadow: 0 0 0 0 rgba(255, 193, 7, 0.5);
-          box-shadow: 0 0 0 0 rgba(255, 193, 7, 0.5);
-}
-
-.btn-danger {
-  color: #FFF;
-  background-color: #dc3545;
-  border-color: #dc3545;
-}
-
-.btn-danger:hover {
-  color: #FFF;
-  background-color: #c82333;
-  border-color: #bd2130;
-}
-
-.btn-danger:focus, .btn-danger.focus {
-  -webkit-box-shadow: 0 0 0 0 rgba(220, 53, 69, 0.5);
-          box-shadow: 0 0 0 0 rgba(220, 53, 69, 0.5);
-}
-
-.btn-danger.disabled, .btn-danger:disabled {
-  color: #FFF;
-  background-color: #dc3545;
-  border-color: #dc3545;
-}
-
-.btn-danger:not(:disabled):not(.disabled):active, .btn-danger:not(:disabled):not(.disabled).active,
-.show > .btn-danger.dropdown-toggle {
-  color: #FFF;
-  background-color: #bd2130;
-  border-color: #b21f2d;
-}
-
-.btn-danger:not(:disabled):not(.disabled):active:focus, .btn-danger:not(:disabled):not(.disabled).active:focus,
-.show > .btn-danger.dropdown-toggle:focus {
-  -webkit-box-shadow: 0 0 0 0 rgba(220, 53, 69, 0.5);
-          box-shadow: 0 0 0 0 rgba(220, 53, 69, 0.5);
-}
 
 .btn-light {
   color: #212529;
@@ -5045,7 +4826,7 @@ input[type="button"].btn-block {
   display: inline-block;
   padding: 0.25em 0.4em;
   font-size: 75%;
-  font-weight: 700;
+  font-weight: 500;
   line-height: 1;
   text-align: center;
   white-space: nowrap;
@@ -5188,7 +4969,7 @@ input[type="button"].btn-block {
 }
 
 .alert-link {
-  font-weight: 700;
+  font-weight: 500;
 }
 
 .alert-dismissible {
@@ -5355,10 +5136,8 @@ input[type="button"].btn-block {
   -webkit-box-pack: center;
       -ms-flex-pack: center;
           justify-content: center;
-  color: #FFF;
   text-align: center;
   white-space: nowrap;
-  background-color: #009688;
   -webkit-transition: width 0.6s ease;
   -o-transition: width 0.6s ease;
   transition: width 0.6s ease;
@@ -5609,7 +5388,7 @@ input[type="button"].btn-block {
 .close {
   float: right;
   font-size: 1.3125rem;
-  font-weight: 700;
+  font-weight: 500;
   line-height: 1;
   color: #000;
   text-shadow: 0 1px 0 #FFF;
@@ -11824,7 +11603,7 @@ body.stop-scrolling {
 .select2-container--default .select2-selection--single .select2-selection__clear {
   cursor: pointer;
   float: right;
-  font-weight: bold;
+  font-weight: 600;
 }
 
 .select2-container--default .select2-selection--single .select2-selection__placeholder {
@@ -11900,7 +11679,7 @@ body.stop-scrolling {
 .select2-container--default .select2-selection--multiple .select2-selection__clear {
   cursor: pointer;
   float: right;
-  font-weight: bold;
+  font-weight: 600;
   margin-top: 5px;
   margin-right: 10px;
 }
@@ -11920,7 +11699,7 @@ body.stop-scrolling {
   color: #FFF;
   cursor: pointer;
   display: inline-block;
-  font-weight: bold;
+  font-weight: 600;
   margin-right: 4px;
 }
 
@@ -12070,7 +11849,7 @@ body.stop-scrolling {
 .select2-container--classic .select2-selection--single .select2-selection__clear {
   cursor: pointer;
   float: right;
-  font-weight: bold;
+  font-weight: 600;
   margin-right: 10px;
 }
 
@@ -12193,7 +11972,7 @@ body.stop-scrolling {
   color: #888;
   cursor: pointer;
   display: inline-block;
-  font-weight: bold;
+  font-weight: 600;
   margin-right: 2px;
 }
 
@@ -12466,7 +12245,7 @@ NOTE: use percentage font sizes or else old IE chokes
 
 .fc-icon-left-single-arrow:after {
   content: "\02039";
-  font-weight: bold;
+  font-weight: 600;
   font-size: 200%;
   top: -7%;
   left: 3%;
@@ -12474,7 +12253,7 @@ NOTE: use percentage font sizes or else old IE chokes
 
 .fc-icon-right-single-arrow:after {
   content: "\0203A";
-  font-weight: bold;
+  font-weight: 600;
   font-size: 200%;
   top: -7%;
   left: -3%;
@@ -13004,7 +12783,7 @@ be a descendant of the grid when it is being dragged.
 }
 
 .fc-day-grid-event .fc-time {
-  font-weight: bold;
+  font-weight: 600;
 }
 
 .fc-day-grid-event .fc-resizer {
@@ -13792,9 +13571,12 @@ be a descendant of the grid when it is being dragged.
   background-color: #222d32;
   -webkit-box-shadow: 0px 8px 17px rgba(0, 0, 0, 0.2);
           box-shadow: 0px 8px 17px rgba(0, 0, 0, 0.2);
-  -webkit-transition: left 0.3s ease, width 0.3s ease;
-  -o-transition: left 0.3s ease, width 0.3s ease;
-  transition: left 0.3s ease, width 0.3s ease;
+  -webkit-transition: left 0.3s ease,
+ width 0.3s ease;
+  -o-transition: left 0.3s ease,
+ width 0.3s ease;
+  transition: left 0.3s ease,
+ width 0.3s ease;
 }
 
 .app-sidebar::-webkit-scrollbar {
@@ -13871,9 +13653,12 @@ be a descendant of the grid when it is being dragged.
   padding: 12px 15px;
   font-size: 1.08em;
   border-left: 3px solid transparent;
-  -webkit-transition: border-left-color 0.3s ease, background-color 0.3s ease;
-  -o-transition: border-left-color 0.3s ease, background-color 0.3s ease;
-  transition: border-left-color 0.3s ease, background-color 0.3s ease;
+  -webkit-transition: border-left-color 0.3s ease,
+ background-color 0.3s ease;
+  -o-transition: border-left-color 0.3s ease,
+ background-color 0.3s ease;
+  transition: border-left-color 0.3s ease,
+ background-color 0.3s ease;
   color: #fff;
 }
 
@@ -14054,14 +13839,6 @@ be a descendant of the grid when it is being dragged.
 
 .btn {
   cursor: pointer;
-}
-
-.btn:not([disabled]):not(.disabled):not(.btn-link):hover, .btn:not([disabled]):not(.disabled):not(.btn-link):focus {
-  text-decoration: none;
-  -webkit-transform: translate3d(0, -1px, 0);
-          transform: translate3d(0, -1px, 0);
-  -webkit-box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.4);
-          box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.4);
 }
 
 .btn[disabled] {
@@ -14909,7 +14686,7 @@ be a descendant of the grid when it is being dragged.
 
 .login-content .login-box label {
   color: #666;
-  font-weight: 700;
+  font-weight: 500;
 }
 
 .login-content .login-box .utility {
@@ -15029,7 +14806,7 @@ be a descendant of the grid when it is being dragged.
 
 .lockscreen-content .lock-box label {
   color: #666;
-  font-weight: 700;
+  font-weight: 500;
 }
 
 .page-error {
