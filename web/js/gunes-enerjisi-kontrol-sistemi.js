@@ -210,8 +210,8 @@ function degerleriYenile(yineleme = true)
 			//Arkaplan rengini kahveringi yap
 			$("#alinan-guc i").css("background-color", "#8B4513");
 			//Panel simgesinin rengini panel voltajıyla doğru orantılı olarak beyazlaştır
-			//22 = panelin en fazla verdiği gerilim
-			var pHex = pickHex([255, 255, 255], [33, 37, 41], degerler.panelV / 22);
+			//pSBV = panelSarjBaslangicVoltu
+			var pHex = pickHex([255, 255, 255], [33, 37, 41], degerler.panelV / ayarlar.pSBV);
 			var renk = "rgb("+pHex[0]+", "+pHex[1]+", "+pHex[2]+")";
 			$("#alinan-guc i").css("color", renk);
 			//İlerleme barını %0 yap.
