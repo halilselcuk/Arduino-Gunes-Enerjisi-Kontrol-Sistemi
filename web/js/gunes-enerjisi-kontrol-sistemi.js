@@ -200,11 +200,10 @@ function degerleriYenile(yineleme = true)
 		var yuzde = ((degerler.akuV - ayarlar.dDV) * 100) / (ayarlar.aSDV - ayarlar.dDV);
 		//Değerleri arayüze yaz
 		$("#depolanan-enerji .progress-bar").css("width", yuzde+"%").attr("aria-valuenow", yuzde);
+		if(yuzde > 10) $("#depolanan-enerji .progress-bar").html("%"+yuzde.toFixed(0));
 		$("#depolanan-enerji b").html(akuWH);
 		
-		//Alınan güç hesabı. 14.5 = regülatörün gerilimi
-		var alinanW = parseInt((ayarlar.sV * degerler.panelA).toFixed(0));
-		//Güç girişi yoksa
+		//Panel rölesi kapalıysa
 		if(degerler.panelR == 1)
 		{
 			//Arkaplan rengini kahveringi yap
@@ -214,26 +213,26 @@ function degerleriYenile(yineleme = true)
 			var pHex = pickHex([255, 255, 255], [33, 37, 41], degerler.panelV / ayarlar.pSBV);
 			var renk = "rgb("+pHex[0]+", "+pHex[1]+", "+pHex[2]+")";
 			$("#alinan-guc i").css("color", renk);
-			//İlerleme barını %0 yap.
-			$("#alinan-guc .progress-bar").css("width", 0).attr("aria-valuenow", 0);
-			//Alınan güç değerini 0 yap
-			$("#alinan-guc b").html(0);
 		}
-		//Güç girişi varsa
+		//Panel rölesi açıksa
 		else 
 		{
 			//Arkaplan rengini sarı yap
 			$("#alinan-guc i").css("background-color", "#ffc107");
 			//Panel simgesini beyaz yap
 			$("#alinan-guc i").css("color", "#fff");
-			//Çekilebilecek en yüksek akımın ne kadarının çekildiğinin hesabı
-			//%100 = panelden çekilebilecek en yüksek akım
-			var yuzde = (degerler.panelA * 100) / ayarlar.pEYA;
-			//Değerleri arayüze yaz
-			$("#alinan-guc .progress-bar").css("width", yuzde+"%").attr("aria-valuenow", yuzde);
-			$("#alinan-guc b").html(alinanW);
 		}
-				
+		
+		//Çekilebilecek en yüksek akımın ne kadarının çekildiğinin hesabı
+		//%100 = panelden çekilebilecek en yüksek akım
+		var yuzde = (degerler.panelA * 100) / ayarlar.pEYA;
+		//Alınan güç hesabı. ayarlar.sV = şarj voltu
+		var alinanW = parseInt((ayarlar.sV * degerler.panelA).toFixed(0));
+		//Değerleri arayüze yaz
+		$("#alinan-guc .progress-bar").css("width", yuzde+"%").attr("aria-valuenow", yuzde);
+		if(yuzde > 10) $("#alinan-guc .progress-bar").html("%"+yuzde.toFixed(0));
+		$("#alinan-guc b").html(alinanW);
+			
 		//Aşırı akım sınırına ne kadar yaklaşıldığının hesabı
 		//%100 = aküden çekilebilecek akım
 		var yuzde = (degerler.akuA * 100) / ayarlar.aAS;
@@ -241,7 +240,16 @@ function degerleriYenile(yineleme = true)
 		var verilenW = parseInt((degerler.akuV * degerler.akuA).toFixed(0));
 		//Değerleri arayüze yaz
 		$("#verilen-guc .progress-bar").css("width", yuzde+"%").attr("aria-valuenow", yuzde);
+		if(yuzde > 10) $("#verilen-guc .progress-bar").html("%"+yuzde.toFixed(0));
 		$("#verilen-guc b").html(verilenW);
+		
+		//Kalan süre hesabı
+		var kalanSure = akuWH;
+		var alinanVerilen = verilenW - alinanW;
+		if(alinanVerilen > 0) kalanSure = akuWH / alinanVerilen;
+		else if(alinanVerilen < 0) kalanSure = (akuWH + Math.abs(alinanW)) / verilenW;
+		//Değeri arayüze yaz
+		$("#verilen-guc strong").html(kalanSure.toFixed(1));
 		
 		//İşlemlerdeki butonların renklerini kaldır
 		$(".islem").removeClass("btn-primary");
