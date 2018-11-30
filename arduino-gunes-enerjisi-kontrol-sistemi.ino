@@ -596,7 +596,7 @@ void loop()
 					
 					if(yol == "surum")
 					{
-						client.println("1.5");
+						client.print("1.5");
 					}
 					
 					else if(yol == "degerler")
