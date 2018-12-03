@@ -201,6 +201,7 @@ function degerleriYenile(yineleme = true)
 		//Değerleri arayüze yaz
 		$("#depolanan-enerji .progress-bar").css("width", yuzde+"%").attr("aria-valuenow", yuzde);
 		if(yuzde > 10) $("#depolanan-enerji .progress-bar").html("%"+yuzde.toFixed(0));
+		else $("#depolanan-enerji .progress-bar").html("");
 		$("#depolanan-enerji b").html(akuWH);
 		
 		//Panel rölesi kapalıysa
@@ -231,6 +232,7 @@ function degerleriYenile(yineleme = true)
 		//Değerleri arayüze yaz
 		$("#alinan-guc .progress-bar").css("width", yuzde+"%").attr("aria-valuenow", yuzde);
 		if(yuzde > 10) $("#alinan-guc .progress-bar").html("%"+yuzde.toFixed(0));
+		else $("#alinan-guc .progress-bar").html("");
 		$("#alinan-guc b").html(alinanW);
 			
 		//Aşırı akım sınırına ne kadar yaklaşıldığının hesabı
@@ -241,6 +243,7 @@ function degerleriYenile(yineleme = true)
 		//Değerleri arayüze yaz
 		$("#verilen-guc .progress-bar").css("width", yuzde+"%").attr("aria-valuenow", yuzde);
 		if(yuzde > 10) $("#verilen-guc .progress-bar").html("%"+yuzde.toFixed(0));
+		else $("#verilen-guc .progress-bar").html("");
 		$("#verilen-guc b").html(verilenW);
 		
 		//Kalan süre hesabı
