@@ -42,6 +42,7 @@ int panelAkimSensoruSifir = 512;
 
 int donguSayaci = 0;
 long fanSayaci = 0;
+long pompaSayaci = 0;
 long bahceAydinlatmaSayaci = 0;
 long lavaboAydinlatmaSayaci = 0;
 int sarjDurdurmaGormezdenGelmeSayisi;
@@ -55,6 +56,7 @@ int panelAkimSensoruSifirlamaSayaci;
 3 geçici açık
 4 geçici kapalı*/
 int fanDurumu;
+int pompaDurumu;
 int bahceAydinlatmaDurumu;
 int lavaboAydinlatmaDurumu;
 
@@ -78,6 +80,7 @@ struct Config {
 	int geciciFanSiniri;
 	int geciciAydinlatmaSiniri;
 	int fanAyari;
+	int pompaAyari;
 	int bahceAydinlatmaAyari;
 	int lavaboAydinlatmaAyari;
 	double panelEnYuksekAkim;
@@ -94,6 +97,7 @@ struct Config {
 	int panelAkimPini;
 	int akuAkimPini;
 	int fanR;
+	int pompaR;
 	int bahceR;
 	int lavaboR;
 	int panelR;
@@ -142,11 +146,13 @@ void setup()
 	logla("Baslatildi");
 
 	digitalWrite(cfg.fanR, HIGH);
+	digitalWrite(cfg.pompaR, HIGH);
 	digitalWrite(cfg.bahceR, HIGH);
 	digitalWrite(cfg.lavaboR, HIGH);
 	digitalWrite(cfg.panelR, HIGH);
 	
 	pinMode(cfg.fanR, OUTPUT);
+	pinMode(cfg.pompaR, OUTPUT);
 	pinMode(cfg.bahceR, OUTPUT);
 	pinMode(cfg.lavaboR, OUTPUT);
 	pinMode(cfg.panelR, OUTPUT);
@@ -159,7 +165,7 @@ void setup()
 	
 	
 	akuAkimSensorunuSifirla();
-	panelAkimSensorunuSifirla();
+	//panelAkimSensorunuSifirla();
 	
 	pinleriTanimla();
 	
@@ -173,6 +179,17 @@ void setup()
 	}
 	//Otomatik
 	else fanDurumu = 2;
+
+	//Kalıcı kapalı
+	if(cfg.pompaAyari == 0) pompaDurumu = 0;
+	//Kalıcı açık
+	else if(cfg.pompaAyari == 1)
+	{
+		digitalWrite(cfg.pompaR, LOW);
+		pompaDurumu = 1;
+	}
+	//Otomatik
+	else pompaDurumu = 2;
 
 	//Kalıcı kapalı
 	if(cfg.bahceAydinlatmaAyari == 0) bahceAydinlatmaDurumu = 0;
@@ -254,6 +271,28 @@ void loop()
 			logla("Derin desarj");
 		}
 		
+		//Otomatikse
+		if(pompaDurumu == 2)
+		{
+			if(cfg.pompaAyari == 1)
+			{
+				digitalWrite(cfg.pompaR, LOW);
+				pompaDurumu = 1;
+			}
+		}
+		//Geçici ayardaysa
+		else if(pompaDurumu > 2)
+		{
+			pompaSayaci++;
+			//Geçici ayarın sayacı dolduysa 
+			if(pompaSayaci > cfg.geciciFanSiniri)
+			{
+				//Otomatik ayara al
+				pompaDurumu = 2;
+				
+				pompaSayaci = 0;
+			}
+		}
 		
 		//Otomatikse
 		if(fanDurumu == 2)
@@ -399,7 +438,7 @@ void loop()
 		//Güç girişi yoksa
 		if((digitalRead(cfg.panelR) == HIGH && abs(panelA) > 0.1) || panelAkimSensoruSifirlamaSayaci > 5000)
 		{
-			panelAkimSensorunuSifirla();
+			//panelAkimSensorunuSifirla();
 			panelAkimSensoruSifirlamaSayaci = 0;
 		}
 	}
@@ -611,18 +650,22 @@ void loop()
 							degerler["akuTV"] = akuTV;
 
 							degerler["fanDurumu"] = fanDurumu;
+							degerler["pompaDurumu"] = pompaDurumu;
 							degerler["bahceAydinlatmaDurumu"] = bahceAydinlatmaDurumu;
 							degerler["lavaboAydinlatmaDurumu"] = lavaboAydinlatmaDurumu;
 							
 							//Geçici ayardaysa sayacı yaz
 							if(fanDurumu > 2)
 							degerler["fanSayaci"] = String(cfg.geciciFanSiniri)+"/"+String(fanSayaci);
+							if(pompaDurumu > 2)
+							degerler["pompaSayaci"] = String(cfg.geciciFanSiniri)+"/"+String(pompaSayaci);
 							if(bahceAydinlatmaDurumu > 2)
 							degerler["bahceAydinlatmaSayaci"] = String(cfg.geciciAydinlatmaSiniri)+"/"+String(bahceAydinlatmaSayaci);
 							if(lavaboAydinlatmaDurumu > 2)
 							degerler["lavaboAydinlatmaSayaci"] = String(cfg.geciciAydinlatmaSiniri)+"/"+String(lavaboAydinlatmaSayaci);
 
 							degerler["fanR"] = digitalRead(cfg.fanR);
+							degerler["pompaR"] = digitalRead(cfg.pompaR);
 							degerler["bahceR"] = digitalRead(cfg.bahceR);
 							degerler["lavaboR"] = digitalRead(cfg.lavaboR);
 							degerler["panelR"] = digitalRead(cfg.panelR);
@@ -808,6 +851,54 @@ void loop()
 								digitalWrite(cfg.fanR, HIGH);
 								fanDurumu = 4;
 								fanSayaci = 0;
+								client.print("1");
+							}
+						}
+						
+						else if(yol == "pompa")
+						{
+							String durum = post("durum");
+							if(durum == "0")
+							{
+								//Kalıcı kapalı
+								digitalWrite(cfg.pompaR, HIGH);
+								pompaDurumu = 0;
+								cfg.pompaAyari = 0;
+								client.print(updateConfig(configFile));
+							}
+							else if(durum == "1")
+							{
+								//Kalıcı açık
+								digitalWrite(cfg.pompaR, LOW);
+								pompaDurumu = 1;
+								cfg.pompaAyari = 1;
+								client.print(updateConfig(configFile));
+							}
+							else if(durum == "2")
+							{
+								//Otomatik
+								pompaDurumu = 2;
+								if(cfg.pompaAyari != 2)
+								{
+									cfg.pompaAyari = 2;
+									client.print(updateConfig(configFile));
+								}
+								else client.println("1");
+							}
+							else if(durum == "3")
+							{
+								//Geçici açık
+								digitalWrite(cfg.pompaR, LOW);
+								pompaDurumu = 3;
+								pompaSayaci = 0;
+								client.print("1");
+							}
+							else if(durum == "4")
+							{
+								//Geçici kapalı
+								digitalWrite(cfg.pompaR, HIGH);
+								pompaDurumu = 4;
+								pompaSayaci = 0;
 								client.print("1");
 							}
 						}
@@ -1066,6 +1157,10 @@ void loop()
 								{
 									cfg.fanR = deger.toInt();
 								}
+								else if(ad == "pompaR")
+								{
+									cfg.pompaR = deger.toInt();
+								}
 								else if(ad == "bahceR")
 								{
 									cfg.bahceR = deger.toInt();
@@ -1306,6 +1401,7 @@ void gucCikisiniDurdur()
 {
 	//Güç çıkış rölelerini kapatır
 	digitalWrite(cfg.fanR, HIGH);
+	digitalWrite(cfg.pompaR, HIGH);
 	digitalWrite(cfg.bahceR, HIGH);
 	digitalWrite(cfg.lavaboR, HIGH);
 	for(int i = 0; i < sizeof(pinler); i++)
@@ -1321,6 +1417,7 @@ bool gucCikisi()
 {
 	//Güç çıkışı varsa true döndürür
 	if(digitalRead(cfg.fanR) == LOW) return true;
+	if(digitalRead(cfg.pompaR) == LOW) return true;
 	if(digitalRead(cfg.bahceR) == LOW) return true;
 	if(digitalRead(cfg.lavaboR) == LOW) return true;
 	for(int i = 0; i < sizeof(pinler); i++)
@@ -1446,6 +1543,7 @@ void loadConfiguration() {
 	//Elle yapılan kalıcı ayarlar
 	//0 kalıcı kapalı, 1 kalıcı açık, 2 otomatik
 	cfg.fanAyari = root["fanA"] | 2;
+	cfg.pompaAyari = root["pA"] | 2;
 	cfg.bahceAydinlatmaAyari = root["bAA"] | 2;
 	cfg.lavaboAydinlatmaAyari = root["lAA"] | 2;
 
@@ -1471,13 +1569,14 @@ void loadConfiguration() {
 	cfg.gormezdenGelmeSayisi = root["gGS"] | 50;
 
 	//Sensör pinleri
-	cfg.akuGerilimPini = root["aGP"] | A8;
-	cfg.panelGerilimPini = root["pGP"] | A9;
-	cfg.panelAkimPini = root["pAP"] | A10;
-	cfg.akuAkimPini = root["aAP"] | A11;
+	cfg.akuGerilimPini = root["aGP"] | 62;
+	cfg.panelGerilimPini = root["pGP"] | 63;
+	cfg.panelAkimPini = root["pAP"] | 64;
+	cfg.akuAkimPini = root["aAP"] | 65;
 	
 	//Röle pinleri
 	cfg.fanR = root["fanR"] | 32;
+	cfg.pompaR = root["pompaR"] | 36;
 	cfg.bahceR = root["bahceR"] | 33;
 	cfg.lavaboR = root["lavaboR"] | 34;
 	cfg.panelR = root["panelR"] | 38;
@@ -1539,6 +1638,7 @@ int updateConfig(String cfgF) {
 	root["gFS"] = cfg.geciciFanSiniri;
 	root["gAS"] = cfg.geciciAydinlatmaSiniri;
 	root["fanA"] = cfg.fanAyari;
+	root["pA"] = cfg.pompaAyari;
 	root["bAA"] = cfg.bahceAydinlatmaAyari;
 	root["lAA"] = cfg.lavaboAydinlatmaAyari;
 	root["pEYA"] = cfg.panelEnYuksekAkim;
@@ -1555,6 +1655,7 @@ int updateConfig(String cfgF) {
 	root["pAP"] = cfg.panelAkimPini;
 	root["aAP"] = cfg.akuAkimPini;
 	root["fanR"] = cfg.fanR;
+	root["pompaR"] = cfg.pompaR;
 	root["bahceR"] = cfg.bahceR;
 	root["lavaboR"] = cfg.lavaboR;
 	root["panelR"] = cfg.panelR;

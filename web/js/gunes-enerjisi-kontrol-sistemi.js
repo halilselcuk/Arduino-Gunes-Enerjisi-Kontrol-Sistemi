@@ -286,6 +286,12 @@ function degerleriYenile(yineleme = true)
 		else if(degerler.fanDurumu == 3) $("#sogutma-btn").addClass("btn-info");
 		else if(degerler.fanDurumu == 4) $("#sogutma-btn").addClass("btn-warning");
 		
+		if(degerler.pompaDurumu == 0) $("#pompa-btn").addClass("btn-secondary");
+		else if(degerler.pompaDurumu == 1) $("#pompa-btn").addClass("btn-danger");
+		else if(degerler.pompaDurumu == 2) $("#pompa-btn").addClass("btn-primary");
+		else if(degerler.pompaDurumu == 3) $("#pompa-btn").addClass("btn-info");
+		else if(degerler.pompaDurumu == 4) $("#pompa-btn").addClass("btn-warning");
+		
 		//Buton simgelerini rölelerin durumlarına göre renklendir
 		if(degerler.bahceR == 1) $("#bahce-btn").children("em").css("color", "#fff");
 		else $("#bahce-btn").children("em").css("color", "#ffc107");
@@ -295,6 +301,9 @@ function degerleriYenile(yineleme = true)
 		
 		if(degerler.fanR == 1) $("#sogutma-btn").children("em").css("color", "#fff");
 		else $("#sogutma-btn").children("em").css("color", "#ffc107");
+		
+		if(degerler.pompaR == 1) $("#pompa-btn").children("em").css("color", "#fff");
+		else $("#pompa-btn").children("em").css("color", "#ffc107");
 		
 		//Butonları pinlerin durumuna göre renklendir
 		for (key in pinler) 
@@ -420,6 +429,41 @@ click: function() {
 		if(degerler.fanR == 0) komut("fan", 4);
 		//Röle kapalıysa geçici aç
 		else if(degerler.fanR == 1) komut("fan", 3);
+	}
+}
+});
+
+$("#pompa-btn").on({
+mousedown: function() {
+	basiliTutma = false;
+	//Buton 3 sn sonra bırakılmazsa kalıcı ayar yap
+	$(this).data('timer', setTimeout(function(th) {
+		basiliTutma = true;
+		//Otomatik ise kalıcı kapat
+		if(degerler.pompaDurumu == 2) komut("pompa", 0);
+		//Kalıcı kapalıysa kalıcı aç
+		else if(degerler.pompaDurumu == 0) komut("pompa", 1);
+		//Kalıcı açık ya da geçiciyse otomatik yap
+		else komut("pompa", 2);
+		
+	}, 3000, this));
+},
+mouseup: function() {
+	//Buton bırakıldıysa kalıcı ayar zamanlamasını durdur
+	clearTimeout( $(this).data('timer') );
+},
+mouseleave: function() {
+	//Buton bırakıldıysa kalıcı ayar zamanlamasını durdur
+	clearTimeout( $(this).data('timer') );
+},
+click: function() {
+	//Buton basılı tutulmadıysa
+	if(!basiliTutma)
+	{
+		//Röle açıksa geçici kapat
+		if(degerler.pompaR == 0) komut("pompa", 4);
+		//Röle kapalıysa geçici aç
+		else if(degerler.pompaR == 1) komut("pompa", 3);
 	}
 }
 });
