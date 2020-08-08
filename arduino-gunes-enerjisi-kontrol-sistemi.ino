@@ -45,6 +45,7 @@ long fanSayaci = 0;
 long pompaSayaci = 0;
 long bahceAydinlatmaSayaci = 0;
 long lavaboAydinlatmaSayaci = 0;
+long resetDonguSayaci = 0;
 int sarjDurdurmaGormezdenGelmeSayisi;
 int fanDurdurmaGormezdenGelmeSayisi;
 int panelAkimSensoruSifirlamaSayaci;
@@ -79,6 +80,7 @@ struct Config {
 	double lavaboAydinlatmaKapatmaAkuVoltu;
 	int geciciFanSiniri;
 	int geciciAydinlatmaSiniri;
+	int resetDonguSiniri;
 	int fanAyari;
 	int pompaAyari;
 	int bahceAydinlatmaAyari;
@@ -101,6 +103,7 @@ struct Config {
 	int bahceR;
 	int lavaboR;
 	int panelR;
+	int resetP;
 	String corsSiteleri;
 	String yonetici;
 	String key;
@@ -150,12 +153,14 @@ void setup()
 	digitalWrite(cfg.bahceR, HIGH);
 	digitalWrite(cfg.lavaboR, HIGH);
 	digitalWrite(cfg.panelR, HIGH);
+	digitalWrite(cfg.resetP, HIGH);
 	
 	pinMode(cfg.fanR, OUTPUT);
 	pinMode(cfg.pompaR, OUTPUT);
 	pinMode(cfg.bahceR, OUTPUT);
 	pinMode(cfg.lavaboR, OUTPUT);
 	pinMode(cfg.panelR, OUTPUT);
+	pinMode(cfg.resetP, OUTPUT);
 	
 	pinMode(cfg.akuGerilimPini, INPUT);
 	pinMode(cfg.panelGerilimPini, INPUT);
@@ -216,6 +221,32 @@ void setup()
 
 void loop()
 {
+	//W5100'ü belli aralıklarla otomatik resetler
+	resetDonguSayaci++;
+	//Reset sayacı dolduysa 
+	if(resetDonguSayaci > cfg.resetDonguSiniri)
+	{
+		//Resetle
+		digitalWrite(cfg.resetP, LOW);
+		delay(100);
+		digitalWrite(cfg.resetP, HIGH);
+		delay(500);
+		
+		//Sunucuyu ve SD'yi başlat
+		Ethernet.begin(mac, ip);
+		server.begin();
+		delay(500);
+		
+		int denemeSayisi = 0;
+		while(!SD.begin(4))
+		{
+			delay(500);
+			denemeSayisi++;
+			if(denemeSayisi == 20) resetFunc();
+		}
+	}
+	
+	
 	//Sensörlerin değerleri stabil olmadığı için değerler toplanılır ve ortalaması alınır
 	delay(1);
 	akuGV += analogRead(cfg.akuGerilimPini);
@@ -1101,6 +1132,12 @@ void loop()
 								{
 									cfg.geciciAydinlatmaSiniri = deger.toInt();
 								}
+								else if(ad == "resetDonguSiniri")
+								{
+									int degerInt = deger.toInt();
+									if(degerInt < 100) degerInt = 100;
+									cfg.resetDonguSiniri = degerInt;
+								}
 								else if(ad == "panelEnYuksekAkim")
 								{
 									cfg.panelEnYuksekAkim = deger.toDouble();
@@ -1173,6 +1210,10 @@ void loop()
 								{
 									cfg.panelR = deger.toInt();
 								}
+								else if(ad == "resetP")
+								{
+									cfg.resetP = deger.toInt();
+								}			
 								else if(ad == "corsSiteleri")
 								{
 									cfg.corsSiteleri = deger;
@@ -1539,6 +1580,7 @@ void loadConfiguration() {
 	//Geçici ayarlamaların kaç döngüden sonra geçersiz kılınacağı
 	cfg.geciciFanSiniri = root["gFS"] | 30000;
 	cfg.geciciAydinlatmaSiniri = root["gAS"] | 30000;
+	cfg.resetDonguSiniri = root["rDG"] | 1000;
 
 	//Elle yapılan kalıcı ayarlar
 	//0 kalıcı kapalı, 1 kalıcı açık, 2 otomatik
@@ -1580,6 +1622,9 @@ void loadConfiguration() {
 	cfg.bahceR = root["bahceR"] | 33;
 	cfg.lavaboR = root["lavaboR"] | 34;
 	cfg.panelR = root["panelR"] | 38;
+	
+	//W5100'ün reset girişine bağlı pin
+	cfg.resetP = root["resetP"] | 6;
 	
 	//Giriş bilgileri
 	cfg.yonetici = root["yonetici"] | "yonetici";
@@ -1637,6 +1682,7 @@ int updateConfig(String cfgF) {
 	root["lAKAV"] = cfg.lavaboAydinlatmaKapatmaAkuVoltu;
 	root["gFS"] = cfg.geciciFanSiniri;
 	root["gAS"] = cfg.geciciAydinlatmaSiniri;
+	root["rDG"] = cfg.resetDonguSiniri;
 	root["fanA"] = cfg.fanAyari;
 	root["pA"] = cfg.pompaAyari;
 	root["bAA"] = cfg.bahceAydinlatmaAyari;
@@ -1659,6 +1705,7 @@ int updateConfig(String cfgF) {
 	root["bahceR"] = cfg.bahceR;
 	root["lavaboR"] = cfg.lavaboR;
 	root["panelR"] = cfg.panelR;
+	root["resetP"] = cfg.resetP;
 	root["yonetici"] = cfg.yonetici;
 	root["key"] = cfg.key;
 	root["kullanici"] = cfg.kullanici;
