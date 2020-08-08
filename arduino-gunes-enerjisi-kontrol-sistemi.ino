@@ -480,14 +480,14 @@ void loop()
 	client = server.available();
   //Gelen bağlantı varsa
 	if (client) {
-		boolean currentLineIsBlank = true;
+		boolean dataReceivingCompleted = true;
 		boolean isPostRequest = false;
 		boolean isFilePost = false;
 		String requestDetails = "";
 		_get = "";
 		_post = "";
 		_cookie = "";
-		//İstek gövdesinin toplam uzunluğu
+		//İstek gövdesinin toplam uzunluğu (istemcinin bildirdiği uzunluk)
 		long contentLength = 1;
 		//İstek gövdesinin alınan uzunluğu
 		int recievedContent = 0;
@@ -500,10 +500,10 @@ void loop()
 		while (client.connected()) {
 			if (client.available()) {
 				char c = client.read();
-				//Belleğe kaydedilen her karaktere +1
+				//Belleğe kaydedilen her karaktere +1 yazılır. -SD karta kaydedilecek karakterler belleğe kaydedilmeden karta yazılır.-
 				if(!isFilePost) sayac++;
 				
-				//Post isteğiyse. Eğer post isteğiyse isPostRequest, header'lar alındaktan sonra true olur.
+				//Post isteğiyse. Eğer post isteğiyse isPostRequest, header'lar alındaktan sonra true olur. -Post içeriği gövdede bulunur.-
 				if(isPostRequest) {
 					//Gelen veri SD karta yazılacaksa
 					if(isFilePost)
@@ -532,8 +532,13 @@ void loop()
 					requestDetails += c;
 				}
 				
-				//Header tamamlandıysa veya bellek fazla işgal edildiyse. Bu blok her istekte sadece bir kere çalışır.
-				if(((c == '\n' && currentLineIsBlank) || sayac > 1500) && !isPostRequest)
+				/* Header alımı tamamlandıysa(boş satır varsa tamamlanmıştır) veya bellek fazla işgal edildiyse header'ı işleyen kod parçasıdır.
+				Post isteği olup olmadığına(bu bilgi istemciden header'la gelir) bu kod parçası karar verir.
+				Post içeriği istek gövdesi olarak header alımı tamamlandıktan sonra alınmaya başlandığından
+				bu kod parçasının tekrar çalışmaması için mevcut isteğin post isteği olup olmadığı kontrol edilir.
+				Bu parça her istekte sadece bir kere çalışır.
+				*/
+				if(((c == '\n' && dataReceivingCompleted) || sayac > 1500) && !isPostRequest)
 				{
 					requestDetails.replace("\n\n", "\n");
 					_get = strBet(requestDetails, " ", " HTTP/1.1");
@@ -583,8 +588,8 @@ void loop()
 						{
 							_post = "&";
 							isPostRequest = true;
-							//Post verileri alınacağı için header tamamlandığında döngüden çıkılmasını önlemek için
-							currentLineIsBlank = false;
+							//Post verileri alınacağı için header tamamlandığında veri alımının durdurulmasını önlemek için
+							dataReceivingCompleted = false;
 							
 							if(yol == "sd_write")
 							{
@@ -618,7 +623,7 @@ void loop()
 				//Header tamamlandıysa ve post isteği değilse 
 				//veya post ise ve post için alınacak veri kalmadıysa
 				//veya bellek fazla işgal edildiyse
-				if (((c == '\n' && currentLineIsBlank) || recievedContent >= contentLength || sayac > 1500) && !isFilePost)
+				if (((c == '\n' && dataReceivingCompleted) || recievedContent >= contentLength || sayac > 1500) && !isFilePost)
 				{
 					printHeader();
 					
@@ -1294,11 +1299,11 @@ void loop()
 				}
 				if (c == '\n') {
 					// you're starting a new line
-					currentLineIsBlank = true;
+					dataReceivingCompleted = true;
 				} 
 				else if (c != '\r') {
 					// you've gotten a character on the current line
-					currentLineIsBlank = false;
+					dataReceivingCompleted = false;
 				}	
 			}
 		}
