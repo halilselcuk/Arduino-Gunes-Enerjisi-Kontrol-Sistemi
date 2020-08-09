@@ -170,7 +170,7 @@ void setup()
 	
 	
 	akuAkimSensorunuSifirla();
-	//panelAkimSensorunuSifirla();
+	panelAkimSensorunuSifirla();
 	
 	pinleriTanimla();
 	
@@ -475,7 +475,7 @@ void loop()
 		//Güç girişi yoksa
 		if((digitalRead(cfg.panelR) == HIGH && abs(panelA) > 0.1) || panelAkimSensoruSifirlamaSayaci > 5000)
 		{
-			//panelAkimSensorunuSifirla();
+			panelAkimSensorunuSifirla();
 			panelAkimSensoruSifirlamaSayaci = 0;
 		}
 	}
