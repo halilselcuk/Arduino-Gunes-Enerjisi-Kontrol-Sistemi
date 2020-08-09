@@ -153,14 +153,14 @@ void setup()
 	digitalWrite(cfg.bahceR, HIGH);
 	digitalWrite(cfg.lavaboR, HIGH);
 	digitalWrite(cfg.panelR, HIGH);
-	digitalWrite(cfg.resetP, HIGH);
+	//digitalWrite(cfg.resetP, HIGH);
 	
 	pinMode(cfg.fanR, OUTPUT);
 	pinMode(cfg.pompaR, OUTPUT);
 	pinMode(cfg.bahceR, OUTPUT);
 	pinMode(cfg.lavaboR, OUTPUT);
 	pinMode(cfg.panelR, OUTPUT);
-	pinMode(cfg.resetP, OUTPUT);
+	//pinMode(cfg.resetP, OUTPUT);
 	
 	pinMode(cfg.akuGerilimPini, INPUT);
 	pinMode(cfg.panelGerilimPini, INPUT);
@@ -226,10 +226,15 @@ void loop()
 	//Reset sayacı dolduysa 
 	if(resetDonguSayaci > cfg.resetDonguSiniri)
 	{
+		digitalWrite(cfg.resetP, HIGH);
+		pinMode(cfg.resetP, OUTPUT);
+		delay(500);
 		//Resetle
 		digitalWrite(cfg.resetP, LOW);
-		delay(100);
+		delay(500);
 		digitalWrite(cfg.resetP, HIGH);
+		delay(500);
+		pinMode(cfg.resetP, INPUT);
 		delay(500);
 		
 		//Sunucuyu ve SD'yi başlat
@@ -244,6 +249,7 @@ void loop()
 			denemeSayisi++;
 			if(denemeSayisi == 20) resetFunc();
 		}
+		delay(100);
 	}
 	
 	
@@ -1236,7 +1242,6 @@ void loop()
 						}
 						else client.print("404");
 					}
-					/* Hata ayıklama için
 					
 					else if(yol == "analog_read")
 					{
@@ -1250,22 +1255,10 @@ void loop()
 						if(pin != -1) client.print(digitalRead(pin));
 					}
 					
-					else if(yol == "digital_write")
-					{
-						int pin = get("pin").toInt();
-						if(pin != -1)
-						{
-							if(get("deger") == "high") digitalWrite(pin, HIGH);
-							else digitalWrite(pin, LOW);
-							
-							client.print("1");
-						}
-					}
-					
 					else if(yol == "analog_write")
 					{
 						int pin = get("pin").toInt();
-						int deger = get("deger").toInt();
+						int deger = post("deger").toInt();
 						if(pin != -1 && deger != -1)
 						{
 							analogWrite(pin, deger);
@@ -1273,6 +1266,7 @@ void loop()
 						}
 					}
 					
+					/* Hata ayıklama için
 					else if(yol == "post_test")
 					{
 						client.println(_post);
