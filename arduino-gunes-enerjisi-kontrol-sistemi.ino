@@ -629,6 +629,7 @@ void loop()
 				//Header tamamlandıysa ve post isteği değilse 
 				//veya post ise ve post için alınacak veri kalmadıysa
 				//veya bellek fazla işgal edildiyse
+				//veya filePost değilse -bu istek yukardaki kod parçasında işlenir-
 				if (((c == '\n' && dataReceivingCompleted) || recievedContent >= contentLength || sayac > 1500) && !isFilePost)
 				{
 					printHeader();
@@ -1062,6 +1063,34 @@ void loop()
 							resetFunc();
 						}
 
+						else if(yol == "reset_w5100")
+						{							
+							digitalWrite(cfg.resetP, HIGH);
+							pinMode(cfg.resetP, OUTPUT);
+							delay(500);
+							//Resetle
+							digitalWrite(cfg.resetP, LOW);
+							delay(500);
+							digitalWrite(cfg.resetP, HIGH);
+							delay(500);
+							pinMode(cfg.resetP, INPUT);
+							delay(500);
+							
+							//Sunucuyu ve SD'yi başlat
+							Ethernet.begin(mac, ip);
+							server.begin();
+							delay(500);
+							
+							int denemeSayisi = 0;
+							while(!SD.begin(4))
+							{
+								delay(500);
+								denemeSayisi++;
+								if(denemeSayisi == 20) resetFunc();
+							}
+							delay(100);
+						}
+
 						else if(yol == "sd_remove")
 						{
 							SD.remove(post("filename"));
@@ -1320,15 +1349,19 @@ String get(String ad)
 {
 	String s = "&"+ad+"=";
 	int baslangic = _get.indexOf(s, 0);
+	
+	//İlk get parametresi & ile değil ? ile başlar
 	if(baslangic == -1)
 	{
 		s = "?"+ad+"=";
 		baslangic = _get.indexOf(s, 0);
 	}
 	
+	//Bitiş get'in sonu olsun(başka parametre olmadığı varsayılarak)
 	int bitis = _get.length();
+	//Varsa sonraki parametreyi bul
 	int bslOp = _get.indexOf("&", baslangic + s.length());
-	
+	//Eğer başka parametre varsa bitiş sonraki parametrenin başlangıcı olsun
 	if(bslOp != -1)
 	bitis = bslOp;
 	
@@ -1343,7 +1376,6 @@ String post(String ad)
 	
 	int bitis = _post.length();
 	int bslOp = _post.indexOf("&", baslangic + s.length());
-	
 	if(bslOp != -1)
 	bitis = bslOp;
 	
@@ -1357,8 +1389,7 @@ String cookie(String ad)
 	int baslangic = _cookie.indexOf(s, 0);
 	
 	int bitis = _cookie.length() -1;
-	int bslOp = _cookie.indexOf(";", baslangic + s.length());
-	
+	int bslOp = _cookie.indexOf(";", baslangic + s.length());	
 	if(bslOp != -1)
 	bitis = bslOp;
 	
@@ -1602,11 +1633,10 @@ void loadConfiguration() {
 	cfg.panelSarjBaslangicVoltu = root["pSBV"] | 19;
 	cfg.akuSarjBaslangicVoltu = root["aSBV"] | 13.1;
 	cfg.panelSarjDurdurmaAmperi = root["pSDA"] | 0.1;
-	//Şarj durdurma voltu tahmini akü voltuyla karşılaştırılır. tahminiAkuGerilimiCarpani 0 yapıldığında gerçek volt dikkate alınır.
 	cfg.akuSarjDurdurmaVoltu = root["aSDV"] | 14;
 	
-	//Panelin verdiği güç sınır sarj durdurma sınırında olduğunda röleler sık sık kapanıp açılacak ve ömrü kısalacaktır. 
-	//Bunu önlemek için sarj ediliyorken sarj durdurma koşulları sağlandıysa belirlenen sayıda görmezden gelinecek.
+	//Panelin verdiği güç sarj durdurma sınırında olduğunda röleler sık sık kapanıp açılacak ve ömrü kısalacaktır. 
+	//Bunu önlemek için sarj edilirken sarj durdurma koşulları sağlandıysa belirlenen sayıda görmezden gelinecek.
 	cfg.gormezdenGelmeSayisi = root["gGS"] | 50;
 
 	//Sensör pinleri
